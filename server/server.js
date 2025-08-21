@@ -14,10 +14,11 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("connect:", socket.id);
+  // TODO load whiteboard on connection
 
   socket.on("draw", (data) => {
     console.log(data)
-    io.emit("draw", data)
+    socket.broadcast.emit("draw", data)  // send to everyone except the sender
   })
 
   socket.on("disconnect", () => {

@@ -15,13 +15,12 @@ export default function DrawingCanvas() {
 
     const stageRef = useRef();
 
-    const [linesToSend, setLinesToSend] = useState([]);
 
     const handleMouseDown = (e) => {
         setIsDrawing(true);
         const pos = e.target.getStage().getPointerPosition();
-        setLinesToSend([
-            ...linesToSend,
+        setLines([
+            ...lines,
             {
                 points: [pos.x, pos.y],
                 color: eraser ? 'white' : color,
@@ -35,18 +34,26 @@ export default function DrawingCanvas() {
         if (!isDrawing) return;
         const stage = e.target.getStage();
         const point = stage.getPointerPosition();
-        const lastLine = linesToSend[linesToSend.length - 1];
+        const lastLine = lines[lines.length - 1];
         lastLine.points = lastLine.points.concat([point.x, point.y]);
 
         const newLines = lines.slice(0, lines.length - 1).concat(lastLine);
-        setLinesToSend(newLines);
+        setLines(newLines);
     };
 
     const handleMouseUp = () => {
-        setIsDrawing(false);
-        
-        sendLines()
+        _endDrawing()
     };
+
+    const handleMouseLeave = () => {
+        _endDrawing()
+    };
+
+    const _endDrawing = () => {
+        if (!isDrawing) return;
+        setIsDrawing(false);
+        sendLine()
+    }
 
     const handleClear = () => {
         setLines([]);
@@ -55,12 +62,8 @@ export default function DrawingCanvas() {
     
     useEffect(() => {
        
-        socket.on("draw", (lines) => {
-            for(let line of lines) {
-                setLines([
-                    ...lines, line
-                ]);
-            }
+        socket.on("draw", (line) => {
+            setLines(prev => [...prev, line]);
         });
 
         return () => {
@@ -68,9 +71,9 @@ export default function DrawingCanvas() {
         };
     }, []);
     
-    const sendLines = () => {
-        socket.emit("draw", linesToSend)
-        setLinesToSend([]);
+    const sendLine = () => {
+        const lastLine = lines[lines.length - 1];
+        socket.emit("draw", lastLine)
     };
 
     return (
@@ -104,6 +107,7 @@ export default function DrawingCanvas() {
                 onMouseDown={handleMouseDown}
                 onMousemove={handleMouseMove}
                 onMouseup={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
                 onTouchStart={handleMouseDown}
                 onTouchMove={handleMouseMove}
                 onTouchEnd={handleMouseUp}
