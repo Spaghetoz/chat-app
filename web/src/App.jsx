@@ -1,4 +1,4 @@
-import DrawCanvas from "./components/DrawCanvas";
+import DrawCanvas from "./features/whiteboard/DrawingCanvas";
 
 
 
