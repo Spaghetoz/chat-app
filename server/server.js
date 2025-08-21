@@ -12,13 +12,18 @@ const io = new Server(server, {
   }
 });
 
+let boardContent = []
+
 io.on("connection", (socket) => {
   console.log("connect:", socket.id);
   // TODO load whiteboard on connection
+  socket.emit('loadBoard', boardContent);
 
-  socket.on("draw", (data) => {
-    console.log(data)
-    socket.broadcast.emit("draw", data)  // send to everyone except the sender
+  socket.on("draw", (line) => {
+
+    boardContent.push(line)
+
+    socket.broadcast.emit("draw", line)  // send to everyone except the sender
   })
 
   socket.on("disconnect", () => {

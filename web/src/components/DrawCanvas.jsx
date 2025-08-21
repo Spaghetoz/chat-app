@@ -61,6 +61,14 @@ export default function DrawingCanvas() {
 
     
     useEffect(() => {
+
+        socket.on("loadBoard", (boardContent) => {
+            // TODO manage shape / images etc loading 
+            for(let line of boardContent) {
+                // TODO if(object is line)
+                setLines(prev => [...prev, line]);
+            }
+        })
        
         socket.on("draw", (line) => {
             setLines(prev => [...prev, line]);
