@@ -3,8 +3,26 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000");
 
-export function useSocketDrawing(setLines, setUsersPos, setBoardSize) {
+export function useSocketDrawing(lines, setLines, shapes, setShapes, setUsersPos, setBoardSize) {
   const positionRef = useRef({ x: 0, y: 0 });
+
+  const _loadBoard = (boardContent) => {
+      for(let item of boardContent) {
+        _drawItem(item)
+      } 
+  }
+
+  const _drawItem = (item) => {
+        switch(item.type) {
+          case "line":
+            setLines((prev) => [...prev, item]);
+            break;
+          case "shape-circle":
+          case "shape-square":
+            setShapes((prev) => [...prev, item])
+            break; 
+        }
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -12,7 +30,9 @@ export function useSocketDrawing(setLines, setUsersPos, setBoardSize) {
     }, 10);
 
     socket.on("init", ({ boardContent, userPositions, boardSize }) => {
-      setLines(boardContent);
+
+      _loadBoard(boardContent)
+
       setUsersPos(userPositions);
       setBoardSize(boardSize);
     });
@@ -29,8 +49,8 @@ export function useSocketDrawing(setLines, setUsersPos, setBoardSize) {
       });
     });
 
-    socket.on("draw", (line) => {
-      setLines((prev) => [...prev, line]);
+    socket.on("draw", (item) => {
+      _drawItem(item)
     });
 
     return () => {

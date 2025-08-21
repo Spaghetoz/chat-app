@@ -1,17 +1,22 @@
 import { useState } from "react";
 
-export function useDrawing(lines, setLines, socket, positionRef) {
+export function useDrawing(selectedMode ,lines, setLines, shapes, setShapes, socket, positionRef) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("#000000");
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [eraser, setEraser] = useState(false);
 
   const handleMouseDown = (e) => {
+
+    if(selectedMode !== "line") return;
+
     setIsDrawing(true);
     const pos = e.target.getStage().getPointerPosition();
+
     setLines([
       ...lines,
       {
+        type: "line",
         points: [pos.x, pos.y],
         color: eraser ? "white" : color,
         strokeWidth,
@@ -35,6 +40,27 @@ export function useDrawing(lines, setLines, socket, positionRef) {
 
   const handleMouseUp = () => endDrawing();
   const handleMouseLeave = () => endDrawing();
+
+  const handleMouseClick = (e) => {
+    
+    const pos = e.target.getStage().getPointerPosition();
+    if(selectedMode === "shape-circle" || selectedMode === "shape-square") {
+        let shapeToAdd = {
+          type: selectedMode,
+          points: [pos.x, pos.y],
+          color: eraser ? "white" : color,
+          strokeWidth,
+          eraser,
+        }
+        // TODO typescript struct for shape and lines
+        setShapes((prev) => [
+            ...prev,
+            shapeToAdd
+        ]);
+        socket.emit("draw", shapeToAdd)
+    } 
+
+  }
 
   const endDrawing = () => {
     if (!isDrawing) return;
@@ -64,5 +90,6 @@ export function useDrawing(lines, setLines, socket, positionRef) {
     handleMouseUp,
     handleMouseLeave,
     handleClear,
+    handleMouseClick
   };
 }

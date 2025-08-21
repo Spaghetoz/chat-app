@@ -29,11 +29,11 @@ io.on("connection", (socket) => {
   
   socket.broadcast.emit("userConnection", { userId: socket.id });
 
-  socket.on("draw", (line) => {
+  socket.on("draw", (item) => {
 
-    boardContent.push(line)
+    boardContent.push(item)
 
-    socket.broadcast.emit("draw", line)  // send to everyone except the sender
+    socket.broadcast.emit("draw", item)  // send to everyone except the sender
   })
 
   socket.on("updateUserPos", (pos) => {

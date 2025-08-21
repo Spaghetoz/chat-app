@@ -1,5 +1,5 @@
 import { useState,} from "react";
-import { Stage, Layer, Line, Circle } from "react-konva";
+import { Stage, Layer, Line, Circle, Rect } from "react-konva";
 
 import { useSocketDrawing } from "./hooks/useSocketDrawing";
 import { useDrawing } from "./hooks/useDrawing";
@@ -9,11 +9,17 @@ import UserCursor from "./components/UserCursor";
 
 export default function DrawingCanvas() {
   const [lines, setLines] = useState([]);
+  const [shapes, setShapes] = useState([]);
+  const [selectedMode, setSelectedMode] = useState("line")
+
   const [usersPos, setUsersPos] = useState({});
   const [boardSize, setBoardSize] = useState({ width: 800, height: 600 });
 
   const { socket, positionRef } = useSocketDrawing(
+    lines,
     setLines,
+    shapes,
+    setShapes,
     setUsersPos,
     setBoardSize
   );
@@ -30,8 +36,9 @@ export default function DrawingCanvas() {
     handleMouseMove,
     handleMouseUp,
     handleMouseLeave,
+    handleMouseClick,
     handleClear,
-  } = useDrawing(lines, setLines, socket, positionRef);
+  } = useDrawing(selectedMode, lines, setLines , shapes, setShapes, socket, positionRef);
 
   return (
     <div style={{ userSelect: "none" }}>
@@ -44,6 +51,7 @@ export default function DrawingCanvas() {
         eraser={eraser}
         setEraser={setEraser}
         handleClear={handleClear}
+        setSelectedMode={setSelectedMode}
       />
 
       <Stage
@@ -56,6 +64,7 @@ export default function DrawingCanvas() {
         onTouchStart={handleMouseDown}
         onTouchMove={handleMouseMove}
         onTouchEnd={handleMouseUp}
+        onClick={handleMouseClick}
         style={{
           background: "#f0f0f0",
           width: boardSize.width,
@@ -74,12 +83,41 @@ export default function DrawingCanvas() {
               lineJoin="round"
             />
           ))}
-            {Object.entries(usersPos).map(([id, pos]) => (
-              <UserCursor 
-                name={id}
-                pos={pos}
-              ></UserCursor>
-             ))}
+
+          {shapes.map((shape, i) => {
+            switch (shape.type) {
+              case "shape-square":
+                return (
+                  <Rect
+                    key={i}
+                    x={shape.points[0]}
+                    y={shape.points[1]}
+                    width={40}
+                    height={40}
+                    fill={shape.color}
+                  />
+                );
+              case "shape-circle":
+                return (
+                  <Circle
+                    key={i}
+                    x={shape.points[0]}
+                    y={shape.points[1]}
+                    radius={25}
+                    fill={shape.color}
+                  />
+                );
+              default:
+                return null;
+            }
+          })}
+
+          {Object.entries(usersPos).map(([id, pos]) => (
+            <UserCursor 
+              name={id}
+              pos={pos}
+            ></UserCursor>
+            ))}
         </Layer>
       </Stage>
     </div>

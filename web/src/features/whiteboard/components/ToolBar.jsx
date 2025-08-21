@@ -7,7 +7,8 @@ export default function ToolBar(
     setStrokeWidth,
     eraser,
     setEraser,
-    handleClear} ) {
+    handleClear,
+    setSelectedMode} ) {
     
     return(
 
@@ -33,6 +34,31 @@ export default function ToolBar(
                 Gomme
             </label>
             <button onClick={handleClear}>Effacer tout</button>
+
+            <label>
+                <input
+                    type="checkbox"
+                    checked={eraser}
+                    onChange={(e) => setSelectedMode("line")}
+                />{" "}
+                Draw
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={eraser}
+                    onChange={(e) => setSelectedMode("shape-circle")}
+                />{" "}
+                Circle
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={eraser}
+                    onChange={(e) => setSelectedMode("shape-square")}
+                />{" "}
+                Square
+            </label>
         </div>
     )
 }
