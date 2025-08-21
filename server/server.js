@@ -11,15 +11,21 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
-
+ 
+// TODO classe/object board in typescript
 let boardContent = []
 let userPositions = {}  // { socketId: {x, y} } TODO typescript 
+let boardSize = {width: 500, height: 500}
 
 io.on("connection", (socket) => {
   console.log("connect:", socket.id);
 
   socket.emit('loadBoard', boardContent);
   socket.emit("loadUsersPos", userPositions)
+
+  socket.emit("init", {
+    boardContent, userPositions, boardSize
+  })
   
   socket.broadcast.emit("userConnection", { userId: socket.id });
 

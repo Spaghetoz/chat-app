@@ -14,6 +14,7 @@ export default function DrawingCanvas() {
     const [eraser, setEraser] = useState(false);
 
     const stageRef = useRef();
+    const [boardSize, setBoardSize] = useState({})
 
     const positionRef = useRef({ x: 0, y: 0 });
 
@@ -73,17 +74,17 @@ export default function DrawingCanvas() {
             socket.emit("updateUserPos", positionRef.current);
         }, 10);
 
-        socket.on("loadBoard", (boardContent) => {
+        socket.on("init", ({boardContent, userPositions, boardSize}) => {
             // TODO manage shape / images etc loading 
             for(let line of boardContent) {
                 // TODO if(object is line)
                 setLines(prev => [...prev, line]);
             }
-        })
 
-        socket.on("loadUsersPos", (userPositions) => {
             setUsersPos(userPositions);
-        });
+
+            setBoardSize(boardSize);
+        })
 
         socket.on("updateUserPos", ({ userId, pos }) => {
             setUsersPos(prev => ({ ...prev, [userId]: pos }));
@@ -143,8 +144,8 @@ export default function DrawingCanvas() {
             </div>
 
             <Stage
-                width={window.innerWidth}
-                height={window.innerHeight - 50}
+                width={boardSize.width}
+                height={boardSize.height}
                 onMouseDown={handleMouseDown}
                 onMousemove={handleMouseMove}
                 onMouseup={handleMouseUp}
