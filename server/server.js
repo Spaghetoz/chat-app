@@ -13,11 +13,15 @@ const io = new Server(server, {
 });
 
 let boardContent = []
+let userPositions = {}  // { socketId: {x, y} } TODO typescript 
 
 io.on("connection", (socket) => {
   console.log("connect:", socket.id);
-  // TODO load whiteboard on connection
+
   socket.emit('loadBoard', boardContent);
+  socket.emit("loadUsersPos", userPositions)
+  
+  socket.broadcast.emit("userConnection", { userId: socket.id });
 
   socket.on("draw", (line) => {
 
@@ -26,7 +30,16 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("draw", line)  // send to everyone except the sender
   })
 
+  socket.on("updateUserPos", (pos) => {
+    userPositions[socket.id] = pos;
+    socket.broadcast.emit("updateUserPos", { userId: socket.id, pos });
+  })
+
   socket.on("disconnect", () => {
+
+    delete userPositions[socket.id];
+    socket.broadcast.emit("userDisconnection", { userId: socket.id });
+
     console.log("disconnect :", socket.id);
   });
 });

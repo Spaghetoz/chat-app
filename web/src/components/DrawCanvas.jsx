@@ -1,5 +1,5 @@
 import React, { useRef, useState , useEffect} from 'react';
-import { Stage, Layer, Line } from 'react-konva';
+import { Stage, Layer, Line, Circle } from 'react-konva';
 
 
 import { io } from "socket.io-client";
@@ -15,6 +15,10 @@ export default function DrawingCanvas() {
 
     const stageRef = useRef();
 
+    const positionRef = useRef({ x: 0, y: 0 });
+
+    // stores the other users cursor position on the board
+    const [usersPos, setUsersPos] = useState({});
 
     const handleMouseDown = (e) => {
         setIsDrawing(true);
@@ -30,15 +34,18 @@ export default function DrawingCanvas() {
         ])
     };
 
-    const handleMouseMove = (e) => {
-        if (!isDrawing) return;
+    const handleMouseMove = (e) => {    
         const stage = e.target.getStage();
         const point = stage.getPointerPosition();
-        const lastLine = lines[lines.length - 1];
-        lastLine.points = lastLine.points.concat([point.x, point.y]);
 
-        const newLines = lines.slice(0, lines.length - 1).concat(lastLine);
-        setLines(newLines);
+        // Saves the cursor position
+        positionRef.current = { x: point.x, y: point.y };
+
+        if (isDrawing) {
+            const lastLine = lines[lines.length - 1];
+            lastLine.points = lastLine.points.concat([point.x, point.y]);
+            setLines([...lines.slice(0, -1), lastLine]);
+        }
     };
 
     const handleMouseUp = () => {
@@ -62,6 +69,10 @@ export default function DrawingCanvas() {
     
     useEffect(() => {
 
+        const interval = setInterval(() => {
+            socket.emit("updateUserPos", positionRef.current);
+        }, 10);
+
         socket.on("loadBoard", (boardContent) => {
             // TODO manage shape / images etc loading 
             for(let line of boardContent) {
@@ -69,13 +80,35 @@ export default function DrawingCanvas() {
                 setLines(prev => [...prev, line]);
             }
         })
+
+        socket.on("loadUsersPos", (userPositions) => {
+            setUsersPos(userPositions);
+        });
+
+        socket.on("updateUserPos", ({ userId, pos }) => {
+            setUsersPos(prev => ({ ...prev, [userId]: pos }));
+        });
+
+        socket.on("userDisconnection", ({ userId }) => {
+            setUsersPos(prev => {
+                const newUsers = { ...prev };
+                delete newUsers[userId];
+                return newUsers;
+            });
+        });
        
         socket.on("draw", (line) => {
             setLines(prev => [...prev, line]);
         });
 
         return () => {
+            clearInterval(interval)
             socket.off("draw"); 
+            socket.off("loadBoard");
+            socket.off("loadUsersPos");
+            socket.off("updateUserPos")
+            socket.off("userDisconnection");
+            
         };
     }, []);
     
@@ -132,6 +165,15 @@ export default function DrawingCanvas() {
                             tension={0.5}
                             lineCap="round"
                             lineJoin="round"
+                        />
+                    ))}
+                    {Object.entries(usersPos).map(([id, pos]) => (
+                        <Circle
+                        key={id}
+                        x={pos.x}
+                        y={pos.y}
+                        radius={5}
+                        fill="red"
                         />
                     ))}
                 </Layer>
