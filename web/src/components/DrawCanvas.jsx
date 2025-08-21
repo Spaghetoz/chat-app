@@ -153,7 +153,11 @@ export default function DrawingCanvas() {
                 onTouchStart={handleMouseDown}
                 onTouchMove={handleMouseMove}
                 onTouchEnd={handleMouseUp}
-                style={{ background: '#f0f0f0' }}
+                style={{
+                    background: '#f0f0f0',
+                    width: boardSize.width,
+                    height: boardSize.height,
+                }}
                 ref={stageRef}
             >
                 <Layer>
