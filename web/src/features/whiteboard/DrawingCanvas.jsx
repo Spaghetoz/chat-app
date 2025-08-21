@@ -114,10 +114,11 @@ export default function DrawingCanvas() {
 
           {Object.entries(usersPos).map(([id, pos]) => (
             <UserCursor 
+              key={id}
               name={id}
               pos={pos}
             ></UserCursor>
-            ))}
+          ))}
         </Layer>
       </Stage>
     </div>
