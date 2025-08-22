@@ -43,7 +43,7 @@ export default function DrawingCanvas() {
   return (
 
     <div 
-      style={{ position: "relative", width: boardSize.width, height: boardSize.height, margin: "0 auto" }}
+      style={{ position: "relative", width: boardSize.width, height: boardSize.height }}
       className="flex shadow-lg"
     >
 

@@ -1,13 +1,10 @@
-import DrawCanvas from "./features/whiteboard/DrawingCanvas";
-
-
+import WhiteboardPage from "./pages/WhiteboardPage"
 
 export default function App() {
   
-
   return(
-    <div className="bg-gray-200 w-screen h-screen">
-      <DrawCanvas></DrawCanvas>
+    <div>
+      <WhiteboardPage/>
     </div>
   )
 }
