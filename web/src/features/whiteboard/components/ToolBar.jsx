@@ -1,5 +1,4 @@
 
-
 export default function ToolBar( 
     {color,
     setColor,
@@ -59,6 +58,8 @@ export default function ToolBar(
                 />{" "}
                 Square
             </label>
+            
         </div>
+        
     )
 }
