@@ -7,7 +7,7 @@ import ToolBar from "./components/ToolBar";
 import UserCursor from "./components/UserCursor";
 
 
-export default function DrawingCanvas() {
+export default function Whiteboard() {
   const [lines, setLines] = useState([]);
   const [shapes, setShapes] = useState([]);
   const [selectedMode, setSelectedMode] = useState("line")

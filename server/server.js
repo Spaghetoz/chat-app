@@ -41,6 +41,11 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("updateUserPos", { userId: socket.id, pos });
   })
 
+  socket.on("clearBoard", () => {
+    boardContent = []
+    io.emit("clearBoard");
+  })
+
   socket.on("disconnect", () => {
 
     delete userPositions[socket.id];

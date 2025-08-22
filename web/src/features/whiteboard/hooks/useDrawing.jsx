@@ -74,7 +74,7 @@ export function useDrawing(selectedMode ,lines, setLines, shapes, setShapes, soc
   };
 
   const handleClear = () => {
-    setLines([]);
+    socket.emit("clearBoard")
   };
 
   return {

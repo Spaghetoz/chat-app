@@ -40,6 +40,11 @@ export function useSocketDrawing(lines, setLines, shapes, setShapes, setUsersPos
     socket.on("updateUserPos", ({ userId, pos }) => {
       setUsersPos((prev) => ({ ...prev, [userId]: pos }));
     });
+    
+    socket.on("clearBoard", () => {
+      setLines([]);
+      setShapes([]);
+    })
 
     socket.on("userDisconnection", ({ userId }) => {
       setUsersPos((prev) => {
