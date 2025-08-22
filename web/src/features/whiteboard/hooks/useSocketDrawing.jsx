@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000");
 
-export function useSocketDrawing(lines, setLines, shapes, setShapes, setUsersPos, setBoardSize) {
+export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, setBoardSize) {
   const positionRef = useRef({ x: 0, y: 0 });
 
   const _loadBoard = (boardContent) => {
@@ -13,15 +13,7 @@ export function useSocketDrawing(lines, setLines, shapes, setShapes, setUsersPos
   }
 
   const _drawItem = (item) => {
-        switch(item.type) {
-          case "line":
-            setLines((prev) => [...prev, item]);
-            break;
-          case "shape-circle":
-          case "shape-square":
-            setShapes((prev) => [...prev, item])
-            break; 
-        }
+    setBoardContent((prev) => [...prev, item])
   }
 
   useEffect(() => {
@@ -42,8 +34,7 @@ export function useSocketDrawing(lines, setLines, shapes, setShapes, setUsersPos
     });
     
     socket.on("clearBoard", () => {
-      setLines([]);
-      setShapes([]);
+      setBoardContent([])
     })
 
     socket.on("userDisconnection", ({ userId }) => {
@@ -64,7 +55,7 @@ export function useSocketDrawing(lines, setLines, shapes, setShapes, setUsersPos
       socket.off("updateUserPos");
       socket.off("userDisconnection");
     };
-  }, [setLines, setUsersPos, setBoardSize]);
+  }, [setBoardContent, setUsersPos, setBoardSize]);
 
   return { socket, positionRef };
 }

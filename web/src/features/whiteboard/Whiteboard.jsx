@@ -8,18 +8,15 @@ import UserCursor from "./components/UserCursor";
 
 
 export default function Whiteboard() {
-  const [lines, setLines] = useState([]);
-  const [shapes, setShapes] = useState([]);
+  const [boardContent, setBoardContent] = useState([]);
   const [selectedMode, setSelectedMode] = useState("line")
 
   const [usersPos, setUsersPos] = useState({});
   const [boardSize, setBoardSize] = useState({ width: 800, height: 600 });
 
   const { socket, positionRef } = useSocketDrawing(
-    lines,
-    setLines,
-    shapes,
-    setShapes,
+    boardContent,
+    setBoardContent,
     setUsersPos,
     setBoardSize
   );
@@ -38,7 +35,7 @@ export default function Whiteboard() {
     handleMouseLeave,
     handleMouseClick,
     handleClear,
-  } = useDrawing(selectedMode, lines, setLines , shapes, setShapes, socket, positionRef);
+  } = useDrawing(selectedMode, boardContent, setBoardContent, socket, positionRef);
 
   return (
 
@@ -65,39 +62,40 @@ export default function Whiteboard() {
         }}
       >
         <Layer>
-          {lines.map((line, i) => (
-            <Line
-              key={i}
-              points={line.points}
-              stroke={line.color}
-              strokeWidth={line.strokeWidth}
-              tension={0.5}
-              lineCap="round"
-              lineJoin="round"
-            />
-          ))}
 
-          {shapes.map((shape, i) => {
-            switch (shape.type) {
+          {boardContent.map((item, i) => {
+            switch (item.type) {
+              case "line":
+                return(
+                  <Line
+                    key={i}
+                    points={item.points}
+                    stroke={item.color}
+                    strokeWidth={item.strokeWidth}
+                    tension={0.5}
+                    lineCap="round"
+                    lineJoin="round"
+                  />
+                );
               case "shape-square":
                 return (
                   <Rect
                     key={i}
-                    x={shape.points[0]}
-                    y={shape.points[1]}
+                    x={item.points[0]}
+                    y={item.points[1]}
                     width={40}
                     height={40}
-                    fill={shape.color}
+                    fill={item.color}
                   />
                 );
               case "shape-circle":
                 return (
                   <Circle
                     key={i}
-                    x={shape.points[0]}
-                    y={shape.points[1]}
+                    x={item.points[0]}
+                    y={item.points[1]}
                     radius={25}
-                    fill={shape.color}
+                    fill={item.color}
                   />
                 );
               default:
