@@ -43,7 +43,8 @@ export default function DrawingCanvas() {
   return (
 
     <div 
-      style={{ position: "relative", width: boardSize.width, height: boardSize.height}}
+      style={{ position: "relative", width: boardSize.width, height: boardSize.height, margin: "0 auto" }}
+      className="flex shadow-lg"
     >
 
       <Stage
@@ -58,7 +59,7 @@ export default function DrawingCanvas() {
         onTouchEnd={handleMouseUp}
         onClick={handleMouseClick}
         style={{
-          background: "#f0f0f0",
+          background: "white",
           width: boardSize.width,
           height: boardSize.height,
         }}
@@ -117,14 +118,14 @@ export default function DrawingCanvas() {
         <div
           style={{
             position: "absolute",
-            bottom: 20,
+            bottom: 40,
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10,
             padding: "8px 16px",
             borderRadius: "12px",
           }}
-          className="flex bg-white shadow-lg"
+          className="flex bg-white shadow-xl inset-shadow-xs"
         >
           <ToolBar
             color={color}

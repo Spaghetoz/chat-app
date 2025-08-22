@@ -15,7 +15,7 @@ const io = new Server(server, {
 // TODO classe/object board in typescript
 let boardContent = []
 let userPositions = {}  // { socketId: {x, y} } TODO typescript 
-let boardSize = {width: 1200, height: 800}
+let boardSize = {width: 1200, height: 1000}
 
 io.on("connection", (socket) => {
   console.log("connect:", socket.id);
