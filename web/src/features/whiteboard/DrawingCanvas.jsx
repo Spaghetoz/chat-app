@@ -41,18 +41,10 @@ export default function DrawingCanvas() {
   } = useDrawing(selectedMode, lines, setLines , shapes, setShapes, socket, positionRef);
 
   return (
-    <div style={{ userSelect: "none" }}>
-      
-      <ToolBar
-        color={color}
-        setColor={setColor}
-        strokeWidth={strokeWidth}
-        setStrokeWidth={setStrokeWidth}
-        eraser={eraser}
-        setEraser={setEraser}
-        handleClear={handleClear}
-        setSelectedMode={setSelectedMode}
-      />
+
+    <div 
+      style={{ position: "relative", width: boardSize.width, height: boardSize.height}}
+    >
 
       <Stage
         width={boardSize.width}
@@ -121,6 +113,30 @@ export default function DrawingCanvas() {
           ))}
         </Layer>
       </Stage>
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 10,
+            padding: "8px 16px",
+            borderRadius: "12px",
+          }}
+          className="flex bg-white shadow-lg"
+        >
+          <ToolBar
+            color={color}
+            setColor={setColor}
+            strokeWidth={strokeWidth}
+            setStrokeWidth={setStrokeWidth}
+            eraser={eraser}
+            setEraser={setEraser}
+            handleClear={handleClear}
+            setSelectedMode={setSelectedMode}
+          />
+        </div>
     </div>
   );
 }
