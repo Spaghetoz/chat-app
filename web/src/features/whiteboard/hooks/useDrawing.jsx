@@ -6,60 +6,89 @@ export function useDrawing(selectedMode ,boardContent, setBoardContent, socket, 
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [eraser, setEraser] = useState(false);
 
-  const handleMouseDown = (e) => {
+  /** modeHandlers centralizes handlers for each drawing mode (mouseDown, mouseMove, mouseUp, etc.). 
+   * (strategy pattern ?)
+  */
+  const modeHandlers = {
 
-    if(selectedMode === "line") {
-      setIsDrawing(true);
-      const pos = e.target.getStage().getPointerPosition();
+    "line": {
+      mouseDown: (e) => {
+        setIsDrawing(true);
+          const pos = e.target.getStage().getPointerPosition();
 
-      setBoardContent([
-        ...boardContent,
-        {
-          type: "line",
-          points: [pos.x, pos.y],
-          color: eraser ? "white" : color,
-          strokeWidth,
-          eraser,
-        },
-      ]);
-    }
+          setBoardContent([
+            ...boardContent,
+            {
+              type: "line",
+              points: [pos.x, pos.y],
+              color: eraser ? "white" : color,
+              strokeWidth,
+              eraser,
+            },
+        ]);
+      },
+      mouseMove: (e) => {
+        const stage = e.target.getStage();
+        const point = stage.getPointerPosition();
+
+        positionRef.current = { x: point.x, y: point.y };
+
+        if (isDrawing) {
+          const lastLine = boardContent[boardContent.length - 1];
+          lastLine.points = lastLine.points.concat([point.x, point.y]);
+          setBoardContent([...boardContent.slice(0, -1), lastLine]);
+        }
+      }
+    },
+    "shape-circle": {
+      mouseClick: handleShapeClick,
+    },
+    "shape-square": {
+      mouseClick: handleShapeClick,
+    },
+  }
+
+  function handleShapeClick(e) {
+    const pos = e.target.getStage().getPointerPosition();
+    const shape = {
+      type: selectedMode,
+      points: [pos.x, pos.y],
+      color: eraser ? "white" : color,
+      strokeWidth,
+      eraser,
+    };
+    setBoardContent((prev) => [...prev, shape]);
+    sendLastBoardItem();
+  }
+
+  
+
+  const handleMouseDown = (e) => {  
+    // call the mouseDown handler if the current mode handler exists
+    modeHandlers[selectedMode]?.mouseDown?.(e);
+  }
+
+  const handleMouseMove = (e) => {    
+    modeHandlers[selectedMode]?.mouseMove?.(e);
   };
-
-  const handleMouseMove = (e) => {
-    const stage = e.target.getStage();
-    const point = stage.getPointerPosition();
-
-    positionRef.current = { x: point.x, y: point.y };
-
-    if (isDrawing) {
-      const lastLine = boardContent[boardContent.length - 1];
-      lastLine.points = lastLine.points.concat([point.x, point.y]);
-      setBoardContent([...boardContent.slice(0, -1), lastLine]);
-    }
-  };
-
-  const handleMouseUp = () => endDrawing();
-  const handleMouseLeave = () => endDrawing();
 
   const handleMouseClick = (e) => {
-    
-    const pos = e.target.getStage().getPointerPosition();
-    if(selectedMode === "shape-circle" || selectedMode === "shape-square") {
-        let shapeToAdd = {
-          type: selectedMode,
-          points: [pos.x, pos.y],
-          color: eraser ? "white" : color,
-          strokeWidth,
-          eraser,
-        }
-        // TODO typescript struct for shape and lines
-        setBoardContent((prev) => [
-            ...prev,
-            shapeToAdd
-        ]);
-        sendLastBoardItem()
-    } 
+    modeHandlers[selectedMode]?.mouseClick?.(e);
   }
+
+  const handleMouseUp = () => {
+    endDrawing();
+    modeHandlers[selectedMode]?.mouseUp?.(e);
+  } 
+  const handleMouseLeave = () => {
+    endDrawing();
+    modeHandlers[selectedMode]?.mouseLeave?.(e);
+  }
+  
+  const handleClear = () => {
+    socket.emit("clearBoard")
+  };
+  
 
   const endDrawing = () => {
     if (!isDrawing) return;
@@ -72,9 +101,6 @@ export function useDrawing(selectedMode ,boardContent, setBoardContent, socket, 
     socket.emit("draw", lastItem);
   };
 
-  const handleClear = () => {
-    socket.emit("clearBoard")
-  };
 
   return {
     isDrawing,
