@@ -1,10 +1,12 @@
 import { useState,} from "react";
-import { Stage, Layer, Line, Circle, Rect } from "react-konva";
+import { Stage, Layer } from "react-konva";
 
 import { useSocketDrawing } from "./hooks/useSocketDrawing";
 import { useDrawing } from "./hooks/useDrawing";
+
 import ToolBar from "./components/ToolBar";
 import UserCursor from "./components/UserCursor";
+import BoardItem from "./components/BoardItem";
 
 
 export default function Whiteboard() {
@@ -14,47 +16,27 @@ export default function Whiteboard() {
   const [usersPos, setUsersPos] = useState({});
   const [boardSize, setBoardSize] = useState({ width: 800, height: 600 });
 
-  const { socket, positionRef } = useSocketDrawing(
-    boardContent,
-    setBoardContent,
-    setUsersPos,
-    setBoardSize
-  );
-
-  const {
-    isDrawing,
-    color,
-    setColor,
-    strokeWidth,
-    setStrokeWidth,
-    eraser,
-    setEraser,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleMouseLeave,
-    handleMouseClick,
-    handleClear,
-  } = useDrawing(selectedMode, boardContent, setBoardContent, socket, positionRef);
+  const { socket, positionRef } = useSocketDrawing(boardContent, setBoardContent, setUsersPos, setBoardSize);
+  const drawing = useDrawing(selectedMode, boardContent, setBoardContent, socket, positionRef);
 
   return (
 
     <div 
-      style={{ position: "relative", width: boardSize.width, height: boardSize.height }}
-      className="flex shadow-lg"
+      style={{width: boardSize.width, height: boardSize.height }}
+      className="flex shadow-lg relative"
     >
 
       <Stage
         width={boardSize.width}
         height={boardSize.height}
-        onMouseDown={handleMouseDown}
-        onMousemove={handleMouseMove}
-        onMouseup={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleMouseDown}
-        onTouchMove={handleMouseMove}
-        onTouchEnd={handleMouseUp}
-        onClick={handleMouseClick}
+        onMouseDown={drawing.handleMouseDown}
+        onMousemove={drawing.handleMouseMove}
+        onMouseup={drawing.handleMouseUp}
+        onMouseLeave={drawing.handleMouseLeave}
+        onTouchStart={drawing.handleMouseDown}
+        onTouchMove={drawing.handleMouseMove}
+        onTouchEnd={drawing.handleMouseUp}
+        onClick={drawing.handleMouseClick}
         style={{
           background: "white",
           width: boardSize.width,
@@ -62,77 +44,25 @@ export default function Whiteboard() {
         }}
       >
         <Layer>
-
-          {boardContent.map((item, i) => {
-            switch (item.type) {
-              case "line":
-                return(
-                  <Line
-                    key={i}
-                    points={item.points}
-                    stroke={item.color}
-                    strokeWidth={item.strokeWidth}
-                    tension={0.5}
-                    lineCap="round"
-                    lineJoin="round"
-                  />
-                );
-              case "shape-square":
-                return (
-                  <Rect
-                    key={i}
-                    x={item.points[0]}
-                    y={item.points[1]}
-                    width={40}
-                    height={40}
-                    fill={item.color}
-                  />
-                );
-              case "shape-circle":
-                return (
-                  <Circle
-                    key={i}
-                    x={item.points[0]}
-                    y={item.points[1]}
-                    radius={25}
-                    fill={item.color}
-                  />
-                );
-              default:
-                return null;
-            }
-          })}
+          {boardContent.map((item, i) => (
+            <BoardItem item={item} key={i}></BoardItem>
+          ))}
 
           {Object.entries(usersPos).map(([id, pos]) => (
-            <UserCursor 
-              key={id}
-              name={id}
-              pos={pos}
-            ></UserCursor>
+            <UserCursor key={id} name={id} pos={pos}></UserCursor>
           ))}
         </Layer>
       </Stage>
 
-        <div
-          style={{
-            position: "absolute",
-            bottom: 40,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10,
-            padding: "8px 16px",
-            borderRadius: "12px",
-          }}
-          className="flex bg-white shadow-xl inset-shadow-xs"
-        >
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-xl flex bg-white shadow-xl">
           <ToolBar
-            color={color}
-            setColor={setColor}
-            strokeWidth={strokeWidth}
-            setStrokeWidth={setStrokeWidth}
-            eraser={eraser}
-            setEraser={setEraser}
-            handleClear={handleClear}
+            color={drawing.color}
+            setColor={drawing.setColor}
+            strokeWidth={drawing.strokeWidth}
+            setStrokeWidth={drawing.setStrokeWidth}
+            eraser={drawing.eraser}
+            setEraser={drawing.setEraser}
+            handleClear={drawing.handleClear}
             setSelectedMode={setSelectedMode}
           />
         </div>
