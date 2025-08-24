@@ -2,12 +2,14 @@
 
 function initWhiteboard(io) {
     
+    const whiteboardNamespace = io.of("/")
+    
     // TODO classe/object board in typescript
     let boardContent = []
     let userPositions = {}  // { socketId: {x, y} } TODO typescript 
     let boardSize = {width: 1200, height: 1000}
 
-    io.of("/").on("connection", (socket) => {
+    whiteboardNamespace.on("connection", (socket) => {
         console.log("connect:", socket.id);
 
         socket.emit('loadBoard', boardContent);
@@ -33,7 +35,7 @@ function initWhiteboard(io) {
 
         socket.on("clearBoard", () => {
             boardContent = []
-            io.emit("clearBoard");
+            whiteboardNamespace.emit("clearBoard");
         })
 
         socket.on("disconnect", () => {
@@ -42,7 +44,8 @@ function initWhiteboard(io) {
             socket.broadcast.emit("userDisconnection", { userId: socket.id });
 
             console.log("disconnect :", socket.id);
-            });
-})}
+        });
+    }
+)}
 
 module.exports = initWhiteboard;
