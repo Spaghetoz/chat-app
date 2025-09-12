@@ -8,19 +8,25 @@ import { Input } from "../../components/ui/input"
 import { SendHorizonal } from "lucide-react";
 
 import MessageBubble from "./components/MessageBubble";
+import useTypingIndicator from "./hooks/useTypingIndicator";
 
 
 export default function ChatBox() {
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
 
+  const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
+
   useEffect(() => {
+
     // TODO add to state before sending instead of when receiving from server
     chatSocket.on('receive_message', (data) => {
       setChat((prev) => [...prev, data]);
     });
 
-    return () => chatSocket.off('receive_message');
+    return () => {
+      chatSocket.off('receive_message'); // TODO off all sockets
+    }
   }, []);
 
   const sendMessage = () => {
@@ -29,6 +35,11 @@ export default function ChatBox() {
       setMessage('');
     }
   };
+
+  const handleSendMessage = () => {
+    sendMessage()
+    sendStopTyping()
+  }
 
   return (
     <div 
@@ -48,15 +59,21 @@ export default function ChatBox() {
           />
         ))}
       </div>
+
+      {typingText && <p>{typingText}</p>}
+
       <div className="flex w-full max-w-sm items-center gap-2">
         <Input
           type="text"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            setMessage(e.target.value)
+            sendTyping()
+          }}
           placeholder="Type a message..."
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
-        <Button onClick={sendMessage}><SendHorizonal/></Button>
+        <Button onClick={handleSendMessage}><SendHorizonal/></Button>
       </div>
     </div>
   );
