@@ -9,6 +9,7 @@ import { SendHorizonal } from "lucide-react";
 
 import MessageBubble from "./components/MessageBubble";
 import useTypingIndicator from "./hooks/useTypingIndicator";
+import MyEmojiPicker from "./components/MyEmojiPicker";
 
 
 export default function ChatBox() {
@@ -41,6 +42,11 @@ export default function ChatBox() {
     sendStopTyping()
   }
 
+  const handleEmojiSelection = (emoji) => {
+    //TODO insert at cursor pos
+    setMessageText(prev => prev + emoji)
+  }
+
   return (
     <div 
       className="flex flex-col gap-5 bg-white h-90/100 p-6 shadow-lg"
@@ -56,6 +62,7 @@ export default function ChatBox() {
             avatarUrl="https://picsum.photos/200"
             username="User1"
             message={msg}
+            chatSocket={chatSocket}
           />
         ))}
       </div>
@@ -73,6 +80,7 @@ export default function ChatBox() {
           placeholder="Type a message..."
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
+        <MyEmojiPicker onEmojiClick={emoji => handleEmojiSelection(emoji)}/>
         <Button onClick={handleSendMessage}><SendHorizonal/></Button>
       </div>
     </div>
