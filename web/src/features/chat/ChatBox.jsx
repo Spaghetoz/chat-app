@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-const chatSocket = io("http://localhost:4000/chat")
-
 import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { SendHorizonal } from "lucide-react";
@@ -12,13 +10,22 @@ import useTypingIndicator from "./hooks/useTypingIndicator";
 import MyEmojiPicker from "./components/MyEmojiPicker";
 
 
+const chatSocket = io("http://localhost:4000/chat")
+
 export default function ChatBox() {
+
   const [messageText, setMessageText] = useState('');
   const [chat, setChat] = useState([]);
 
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
 
   useEffect(() => {
+
+    chatSocket.emit("load_last_messages")
+
+    chatSocket.on("last_messages", (messages) => {
+      setChat(messages)
+    })
 
     // TODO add to state before sending instead of when receiving from server
     chatSocket.on('receive_message', (data) => {

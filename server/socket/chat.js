@@ -5,13 +5,25 @@ function initChat(io) {
 
     const chatNamespace = io.of("/chat")
 
+    let messages = []
+
     chatNamespace.on("connection" , (socket) => {
 
+        socket.on("load_last_messages", () => {
+            const messagesLimit = 20
+            socket.emit("last_messages", messages.slice(-messagesLimit))
+        })
+
         socket.on('send_message', (messageText) => {
+
             const message = {
+                id: Object.keys(messages).length, // TODO uuid
                 senderId: socket.id,
                 text: messageText,
+                reactions: {}
             }
+            
+            messages.push(message)
 
             chatNamespace.emit('receive_message', message);
         });
