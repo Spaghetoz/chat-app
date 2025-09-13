@@ -11,7 +11,7 @@ export default function MessageBubble({ avatarUrl, username, message }) {
         </Avatar>
 
         <div className="max-w-xs px-4 py-3 rounded-2xl bg-gray-100 text-gray-900 text-sm break-words">
-            {message}
+            {message.text}
         </div>
 
     </div>

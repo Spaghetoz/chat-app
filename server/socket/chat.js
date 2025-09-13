@@ -7,8 +7,13 @@ function initChat(io) {
 
     chatNamespace.on("connection" , (socket) => {
 
-        socket.on('send_message', (data) => {
-            chatNamespace.emit('receive_message', data);
+        socket.on('send_message', (messageText) => {
+            const message = {
+                senderId: socket.id,
+                text: messageText,
+            }
+
+            chatNamespace.emit('receive_message', message);
         });
 
         socket.on("user_typing", () => {

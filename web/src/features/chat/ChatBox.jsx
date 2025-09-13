@@ -12,7 +12,7 @@ import useTypingIndicator from "./hooks/useTypingIndicator";
 
 
 export default function ChatBox() {
-  const [message, setMessage] = useState('');
+  const [messageText, setMessageText] = useState('');
   const [chat, setChat] = useState([]);
 
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
@@ -30,9 +30,9 @@ export default function ChatBox() {
   }, []);
 
   const sendMessage = () => {
-    if (message.trim() !== '') {
-      chatSocket.emit('send_message', message);
-      setMessage('');
+    if (messageText.trim() !== '') {
+      chatSocket.emit('send_message', messageText);
+      setMessageText('');
     }
   };
 
@@ -65,9 +65,9 @@ export default function ChatBox() {
       <div className="flex w-full max-w-sm items-center gap-2">
         <Input
           type="text"
-          value={message}
+          value={messageText}
           onChange={(e) => {
-            setMessage(e.target.value)
+            setMessageText(e.target.value)
             sendTyping()
           }}
           placeholder="Type a message..."
