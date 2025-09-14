@@ -12,7 +12,7 @@ export default function Message({ msg }) {
             {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}   {/*Todo add time to message variable */}
           </div>
           <div
-            className={`mt-1 inline-block p-3 rounded-2xl max-w-xl whitespace-pre-wrap ${
+            className={`mt-1 inline-block p-3 rounded-2xl max-w-xl whitespace-pre-wrap break-words ${
               isMe ? "bg-neutral-600 text-white" : "bg-neutral-600 text-neutral-100"
             }`}
           >

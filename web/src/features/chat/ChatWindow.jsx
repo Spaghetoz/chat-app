@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
 import { Button } from "../../components/ui/button"
-import { Input } from "../../components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { SendHorizonal, Hash, Users  } from "lucide-react";
 
@@ -99,7 +98,7 @@ export default function ChatWindow({ room }) {
             }}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             placeholder={`Public message #${room.name}`}
-            className="resize-none h-16"
+            className="resize-none h-18"
           />
           <div className="flex items-center justify-between mt-2 gap-2">
             <div className="flex items-center gap-2">
