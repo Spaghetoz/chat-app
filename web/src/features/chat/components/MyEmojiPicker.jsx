@@ -22,10 +22,14 @@ export default function MyEmojiPicker({onEmojiClick}) {
     }
 
     return(
-        <div>
+        <div className="relative inline-block">
             <Button onClick={handleOpen}><SmilePlus/></Button>
-
-            {isOpen && <EmojiPicker onEmojiClick={handleEmojiClick}/>}
+            
+            {isOpen && (
+                <div className="absolute z-50 mt-2">
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+                </div>
+            )}
         </div>
     )
 }
