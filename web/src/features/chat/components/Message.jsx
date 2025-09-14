@@ -4,7 +4,7 @@ export default function Message({ msg }) {
     return (
       <div className={`flex gap-3 ${isMe ? "justify-end" : "justify-start"}`}>
         {!isMe && (
-          <div className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center">{msg.senderId[0]}</div>
+          <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">{msg.senderId[0]}</div>
         )}
         <div>
           <div className={`text-xs ${isMe ? "text-right" : "text-left"} text-neutral-400`}>
