@@ -8,7 +8,7 @@ export default function DirectMessageList({directMessages}) {
 
         <div className="w-64 text-sm p-3 flex flex-col gap-2">
         <div className="px-2 py-1 font-semibold flex items-center gap-2">
-            <Hash size={16} /> <span>Private chats</span>
+            <Hash size={16} /> <span>Direct messages</span>
         </div>
         <div className="flex-1 overflow-auto">
             {directMessages.map((c, i) => (

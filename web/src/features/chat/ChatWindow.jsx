@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import { Button } from "../../components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -9,32 +8,16 @@ import Message from "./components/Message";
 import useTypingIndicator from "./hooks/useTypingIndicator";
 import MyEmojiPicker from "./components/MyEmojiPicker";
 
-const chatSocket = io("http://localhost:4000/chat")
+import { ChatContext } from "./contexts/ChatContext";
 
 export default function ChatWindow({ room }) {
 
   const [messageText, setMessageText] = useState('');
-  const [chat, setChat] = useState([]);
+
+  const {chatSocket, chat} = useContext(ChatContext)
 
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
-
-  useEffect(() => {
-
-    chatSocket.emit("load_last_messages")
-
-    chatSocket.on("last_messages", (messages) => {
-      setChat(messages)
-    })
-
-    // TODO add to state before sending instead of when receiving from server
-    chatSocket.on('receive_message', (data) => {
-      setChat((prev) => [...prev, data]);
-    });
-
-    return () => {
-      chatSocket.off('receive_message'); // TODO off all sockets
-    }
-  }, []);
+  
 
   const endRef = useRef(null);
     useEffect(() => {
@@ -76,7 +59,6 @@ export default function ChatWindow({ room }) {
           {chat.map((msg, i) => (
             <Message
               key={i}
-              username="User1"
               msg={msg}
               chatSocket={chatSocket}
             />

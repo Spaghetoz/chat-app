@@ -8,10 +8,13 @@ function initChat(io) {
     let messages = []
 
     chatNamespace.on("connection" , (socket) => {
+        //todo user id
+        // User joins his room to be able to receive direct messages
+        socket.join(socket.id + "_dm")
 
         socket.on("load_last_messages", () => {
             const messagesLimit = 20
-            socket.emit("last_messages", messages.slice(-messagesLimit))
+            socket.emit("load_last_messages", messages.slice(-messagesLimit))
         })
 
         socket.on('send_message', (messageText) => {

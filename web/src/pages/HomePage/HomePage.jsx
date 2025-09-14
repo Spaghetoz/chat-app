@@ -6,8 +6,6 @@ import MemberList from "../../features/chat/components/MemberList";
 import ChatWindow from "../../features/chat/ChatWindow";
 import PrivateChatList from "../../features/chat/components/DirectMessageList";
 
-import { MessageSquare, Hash } from "lucide-react";
-
 const initialRooms = [
   { id: "ch-1", name: "Room 1", type: "text" },
   { id: "ch-2", name: "Room 2", type: "text" },
