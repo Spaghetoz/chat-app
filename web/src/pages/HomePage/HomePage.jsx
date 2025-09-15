@@ -4,7 +4,7 @@ import RoomList from "../../features/chat/components/RoomList";
 import MemberList from "../../features/chat/components/MemberList";
 
 import ChatWindow from "../../features/chat/ChatWindow";
-import PrivateChatList from "../../features/chat/components/DirectMessageList";
+import PrivateMessageList from "../../features/chat/components/PrivateMessageList";
 
 const initialRooms = [
   { id: "ch-1", name: "Room 1", type: "text" },
@@ -17,11 +17,6 @@ const initialMembers = [
   { id: "u2", name: "Bob", status: "idle" },
   { id: "u3", name: "Charlie", status: "offline" },
 ];
-
-const directMessages = [
-  { id: "ch-3", name: "Room 3", type: "text" },
-]
-
 
 export default function HomePage() {
   const [rooms] = useState(initialRooms);
@@ -37,11 +32,11 @@ export default function HomePage() {
 
         <div className="flex flex-col bg-neutral-950">
           <RoomList rooms={rooms} activeRoom={activeRoom} onSelect={setActiveRoom}/>
-          <PrivateChatList directMessages={directMessages}/>
+          <PrivateMessageList/>
         </div>
 
         <div className="flex-1 flex flex-col">
-          <ChatWindow room={room}/>
+          <ChatWindow chatType="global" toId=""/>
         </div>
 
         <MemberList members={members} />

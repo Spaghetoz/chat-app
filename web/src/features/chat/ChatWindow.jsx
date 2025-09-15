@@ -10,7 +10,7 @@ import MyEmojiPicker from "./components/MyEmojiPicker";
 
 import { ChatContext } from "./contexts/ChatContext";
 
-export default function ChatWindow({ room }) {
+export default function ChatWindow({ chatType, toId }) {
 
   const [messageText, setMessageText] = useState('');
 
@@ -18,17 +18,20 @@ export default function ChatWindow({ room }) {
 
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
   
+  const [toUser, setToUser] = useState("") // TODO remove
 
   const endRef = useRef(null);
     useEffect(() => {
       endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chat, room]);
+  }, [chat, toId]);
 
 
   const sendMessage = () => {
     if (messageText.trim() !== '') {
-      chatSocket.emit('send_message', messageText);
+      chatSocket.emit('send_message', {messageText: messageText, chatType: "global", toId:""});
+      chatSocket.emit('send_message', {messageText: messageText, chatType: "private", toId:toUser});
       setMessageText('');
+      setToUser("") //TOOD REMOVE
     }
   };
 
@@ -48,7 +51,7 @@ export default function ChatWindow({ room }) {
       <div className="h-16 border-b border-neutral-800 flex items-center px-6 justify-between">
         <div className="flex items-center gap-3">
           <Hash size={18} />
-          <div className="text-lg font-semibold">{room?.name}</div>
+          <div className="text-lg font-semibold">{toId}</div>
         </div>
         <Button variant="ghost"><Users/></Button>
       </div>
@@ -68,6 +71,8 @@ export default function ChatWindow({ room }) {
       </div>
       
       {typingText && <p>{typingText}</p>}
+
+      <Textarea value={toUser} onChange={((e) => {setToUser(e.target.value)})} placeholder="Private message user id"/> {/**todo remove */}
       
       {/* Message typing box */}
       <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-950 flex items-start gap-4">
@@ -79,7 +84,7 @@ export default function ChatWindow({ room }) {
               sendTyping()
             }}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            placeholder={`Public message #${room.name}`}
+            placeholder={`${chatType} message to #${toId}`}
             className="resize-none h-18"
           />
           <div className="flex items-center justify-between mt-2 gap-2">
