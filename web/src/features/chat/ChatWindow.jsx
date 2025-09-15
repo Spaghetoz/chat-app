@@ -10,28 +10,24 @@ import MyEmojiPicker from "./components/MyEmojiPicker";
 
 import { ChatContext } from "./contexts/ChatContext";
 
-export default function ChatWindow({ chatType, toId }) {
+export default function ChatWindow({ chatType, toId, messages }) {
 
   const [messageText, setMessageText] = useState('');
 
-  const {chatSocket, chat} = useContext(ChatContext)
+  const {chatSocket} = useContext(ChatContext)
 
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
-  
-  const [toUser, setToUser] = useState("") // TODO remove
 
   const endRef = useRef(null);
     useEffect(() => {
       endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chat, toId]);
+  }, [messages, toId]);
 
 
   const sendMessage = () => {
     if (messageText.trim() !== '') {
-      chatSocket.emit('send_message', {messageText: messageText, chatType: "global", toId:""});
-      chatSocket.emit('send_message', {messageText: messageText, chatType: "private", toId:toUser});
+      chatSocket.emit('send_message', {messageText: messageText, chatType: chatType, toId:toId});
       setMessageText('');
-      setToUser("") //TOOD REMOVE
     }
   };
 
@@ -59,7 +55,7 @@ export default function ChatWindow({ chatType, toId }) {
       {/* Messages List */}
       <div className="flex-1 overflow-auto p-6 min-h-0">
         <div className="flex flex-col gap-4">
-          {chat.map((msg, i) => (
+          {messages.map((msg, i) => (
             <Message
               key={i}
               msg={msg}
@@ -71,8 +67,6 @@ export default function ChatWindow({ chatType, toId }) {
       </div>
       
       {typingText && <p>{typingText}</p>}
-
-      <Textarea value={toUser} onChange={((e) => {setToUser(e.target.value)})} placeholder="Private message user id"/> {/**todo remove */}
       
       {/* Message typing box */}
       <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-950 flex items-start gap-4">
