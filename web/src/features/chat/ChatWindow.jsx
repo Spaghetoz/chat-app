@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef, useContext } from "react";
 
 import { Button } from "../../components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { SendHorizonal, Hash, Users  } from "lucide-react";
+import { SendHorizonal, Hash, Presentation  } from "lucide-react";
 
 import Message from "./components/Message";
 import useTypingIndicator from "./hooks/useTypingIndicator";
@@ -11,13 +10,19 @@ import MyEmojiPicker from "./components/MyEmojiPicker";
 
 import { ChatContext } from "./contexts/ChatContext";
 
+import Whiteboard from "@/features/whiteboard/Whiteboard"; // TODO move outside
+
 export default function ChatWindow({ chatType, toId, messages }) {
 
   const [messageText, setMessageText] = useState('');
-
   const {chatSocket} = useContext(ChatContext)
-
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator();
+
+  // TODO move whiteboard opening outside of ChatWindow (for example in Homepage)
+  const [showWhiteboard, setShowWhiteboard] = useState(false); 
+  const toggleWhiteboard = () => {
+    setShowWhiteboard(!showWhiteboard)
+  }
 
   const endRef = useRef(null);
     useEffect(() => {
@@ -50,7 +55,7 @@ export default function ChatWindow({ chatType, toId, messages }) {
           <Hash size={18} />
           <div className="text-lg font-semibold">{toId}</div>
         </div>
-        <Button variant="ghost"><Users/></Button>
+        <Button variant="ghost" onClick={toggleWhiteboard}><Presentation/></Button>
       </div>
 
       {/* Messages List */}
@@ -96,6 +101,8 @@ export default function ChatWindow({ chatType, toId, messages }) {
           </div>
         </div>
       </div>
+
+      {showWhiteboard && <Whiteboard/>}
     </div>
   )
 
