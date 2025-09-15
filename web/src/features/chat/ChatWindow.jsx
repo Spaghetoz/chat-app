@@ -67,7 +67,11 @@ export default function ChatWindow({ chatType, toId, messages }) {
         </div>
       </div>
       
-      {typingText && <p>{typingText}</p>}
+      {typingText && 
+        <span class="text-neutral-200 italic p-3">
+          <span class="animate-pulse">{typingText}</span>
+        </span>
+      }
       
       {/* Message typing box */}
       <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-950 flex items-start gap-4">
