@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 
 import { Button } from "../../components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { SendHorizonal, Hash, Users  } from "lucide-react";
 
 import Message from "./components/Message";
@@ -16,7 +17,7 @@ export default function ChatWindow({ chatType, toId, messages }) {
 
   const {chatSocket} = useContext(ChatContext)
 
-  const { typingText, sendTyping, sendStopTyping } = useTypingIndicator(chatSocket);
+  const { typingText, sendTyping, sendStopTyping } = useTypingIndicator();
 
   const endRef = useRef(null);
     useEffect(() => {
@@ -70,8 +71,8 @@ export default function ChatWindow({ chatType, toId, messages }) {
       
       {/* Message typing box */}
       <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-950 flex items-start gap-4">
-        <div className="flex flex-1 flex-row gap-2">
-          <Textarea
+        <div className="flex flex-1 flex-row gap-2 ">
+          <Input
             value={messageText}
             onChange={(e) => {
               setMessageText(e.target.value)
@@ -79,7 +80,7 @@ export default function ChatWindow({ chatType, toId, messages }) {
             }}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             placeholder={`${chatType} message to #${toId}`}
-            className="resize-none h-18"
+            className="border-none bg-neutral-800 h-12 !text-[15px]"
           />
           <div className="flex items-center justify-between mt-2 gap-2">
             <div className="flex items-center gap-2">

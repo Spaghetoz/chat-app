@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ChatContext } from "../contexts/ChatContext";
 
 /** Hook managing the typing indicator feature */
-export default function useTypingIndicator(chatSocket) {
+export default function useTypingIndicator() {
 
     const [typingUsers, setTypingUsers] = useState({});
     const [typingText, setTypingText] = useState("");
     const TYPING_TIMEOUT_IN_MS = 6000; 
+
+    const {chatSocket} = useContext(ChatContext)
   
     const userStoppedTyping = (userId) => {
       return typingUsers[userId].lastTyping < (Date.now() - TYPING_TIMEOUT_IN_MS)
@@ -44,6 +47,7 @@ export default function useTypingIndicator(chatSocket) {
 
     const sendTyping = () => {
         chatSocket.emit("user_typing")
+    console.log("sent")
     }
     const sendStopTyping = () => {
         chatSocket.emit("user_stop_typing") 

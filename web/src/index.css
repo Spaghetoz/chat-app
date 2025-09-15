@@ -118,7 +118,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-html {
-  font-size: 17px; 
-}
