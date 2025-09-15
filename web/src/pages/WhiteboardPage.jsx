@@ -1,5 +1,6 @@
 import Whiteboard from "@/features/whiteboard/Whiteboard";
 
+//TODO delete this page
 export default function WhiteboardPage() {
 
   return(

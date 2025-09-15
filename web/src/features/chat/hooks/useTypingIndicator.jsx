@@ -47,7 +47,6 @@ export default function useTypingIndicator() {
 
     const sendTyping = () => {
         chatSocket.emit("user_typing")
-    console.log("sent")
     }
     const sendStopTyping = () => {
         chatSocket.emit("user_stop_typing") 

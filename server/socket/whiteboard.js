@@ -12,11 +12,8 @@ function initWhiteboard(io) {
     whiteboardNamespace.on("connection", (socket) => {
         console.log("connect:", socket.id);
 
-        socket.emit('loadBoard', boardContent);
-        socket.emit("loadUsersPos", userPositions)
-
-        socket.emit("init", {
-            boardContent, userPositions, boardSize
+        socket.on("init", () => {
+            socket.emit("init", {boardContent, userPositions, boardSize})
         })
         
         socket.broadcast.emit("userConnection", { userId: socket.id });

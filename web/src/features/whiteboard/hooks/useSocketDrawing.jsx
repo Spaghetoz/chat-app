@@ -21,6 +21,8 @@ export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, set
       socket.emit("updateUserPos", positionRef.current);
     }, 10);
 
+    socket.emit("init")
+
     socket.on("init", ({ boardContent, userPositions, boardSize }) => {
 
       _loadBoard(boardContent)
@@ -55,7 +57,7 @@ export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, set
       socket.off("updateUserPos");
       socket.off("userDisconnection");
     };
-  }, [setBoardContent, setUsersPos, setBoardSize]);
+  }, []);
 
   return { socket, positionRef };
 }
