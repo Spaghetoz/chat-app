@@ -3,6 +3,8 @@ import LandingLayout from "./layouts/LandingLayout";
 import ChatPage from "./pages/ChatPage"
 import HomePage from "./pages/HomePage"
 
+import NotFoundPage from "./pages/NotFoundPage"
+
 import { BrowserRouter, Routes, Route } from "react-router";
 
 export default function App() {
@@ -16,7 +18,9 @@ export default function App() {
 
         <Route element={<LandingLayout/>}>
           <Route path="/home" element={<HomePage/>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
+        
       </Routes>
     </BrowserRouter>
   )
