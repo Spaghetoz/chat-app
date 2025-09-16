@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 
-import RoomList from "../../features/chat/components/RoomList";
-import MemberList from "../../features/chat/components/MemberList";
+import RoomList from "../features/chat/components/RoomList";
+import MemberList from "../features/chat/components/MemberList";
 
-import ChatWindow from "../../features/chat/ChatWindow";
-import PrivateMessageList from "../../features/chat/components/PrivateMessageList";
-import { ChatContext } from "../../features/chat/contexts/ChatContext";
+import ChatWindow from "../features/chat/ChatWindow";
+import PrivateMessageList from "../features/chat/components/PrivateMessageList";
+import { ChatContext } from "../features/chat/contexts/ChatContext";
 
 const initialMembers = [
   { id: "u1", name: "Alice", status: "online" },
@@ -13,7 +13,7 @@ const initialMembers = [
   { id: "u3", name: "Charlie", status: "offline" },
 ];
 
-export default function HomePage() {
+export default function ChatPage() {
   //const [rooms] = useState(initialRooms);
   //const [activeRoom, setActiveRoom] = useState(rooms[0].id);
   const [members] = useState(initialMembers);
