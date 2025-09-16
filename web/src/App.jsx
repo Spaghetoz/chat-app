@@ -7,13 +7,23 @@ import NotFoundPage from "./pages/NotFoundPage"
 
 import { BrowserRouter, Routes, Route } from "react-router";
 
+
+import {ChatProvider} from "./features/chat/contexts/ChatContext"
+
 export default function App() {
   
   return(
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout/>}>
-          <Route path="/" element={<ChatPage/>} />
+
+          <Route path="/" element={
+            <ChatProvider>
+              <ChatPage/>
+            </ChatProvider>
+          }
+          />
+          
         </Route>
 
         <Route element={<LandingLayout/>}>
