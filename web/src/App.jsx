@@ -1,9 +1,9 @@
 import AppLayout from "./layouts/AppLayout";
 import LandingLayout from "./layouts/LandingLayout";
-import ChatPage from "./pages/ChatPage"
-import HomePage from "./pages/HomePage"
+import ChatPage from "./pages/app/ChatPage"
+import HomePage from "./pages/ui/HomePage"
 
-import NotFoundPage from "./pages/NotFoundPage"
+import NotFoundPage from "./pages/ui/NotFoundPage"
 
 import { BrowserRouter, Routes, Route } from "react-router";
 
@@ -23,7 +23,7 @@ export default function App() {
             </ChatProvider>
           }
           />
-          
+
         </Route>
 
         <Route element={<LandingLayout/>}>
