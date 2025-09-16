@@ -1,4 +1,4 @@
-import { Outlet, NavLink, Link } from "react-router";
+import { Outlet, NavLink } from "react-router";
 
 /** Layout for the landing page (Welcome page, FAQ, About us etc...) */
 export default function LandingLayout() {
@@ -11,15 +11,16 @@ export default function LandingLayout() {
                 <a href="/home" className="text-xl font-bold text-neutral-100">Chat</a>
 
                 <nav className="flex items-center gap-6">
-                <a href="/home" className="text-neutral-200 hover:text-white transition-colors">Home</a>
-                <a href="/faq" className="text-neutral-200 hover:text-white transition-colors">FAQ</a>
-                <a href="/contact" className="text-neutral-200 hover:text-white transition-colors">Contact</a>
+                    <a href="/home" className="text-neutral-200 hover:text-white transition-colors">Home</a>
+                    <a href="/faq" className="text-neutral-200 hover:text-white transition-colors">FAQ</a>
+                    <a href="/contact" className="text-neutral-200 hover:text-white transition-colors">Contact</a>
 
-                <NavLink to="/" end>
-                    <span className="ml-4 inline-block rounded-2xl border border-blue-600 bg-blue-600 px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
-                    Open app
-                    </span>
-                </NavLink>
+                    <NavLink to="/" end>
+                        <span className="ml-4 inline-block rounded-2xl border border-blue-600 bg-blue-600 px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+                        Open app
+                        </span>
+                    </NavLink>
+                    
                 </nav>
             </div>
             </header>

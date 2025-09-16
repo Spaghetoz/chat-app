@@ -19,11 +19,17 @@ export default function HomePage() {
 
             <div className="mt-4 flex gap-4 sm:mt-6">
               
-                <Link to="/"
-                  className="inline-block rounded-lg border border-blue-600 bg-blue-600 px-5 py-3 font-semibold text-neutral-100 shadow-sm transition-colors hover:bg-blue-700"
-                >
-                  Start chatting
-                </Link>
+              <Link to="/"
+                className="inline-block rounded-lg border border-blue-600 bg-blue-600 px-5 py-3 font-semibold text-neutral-100 shadow-sm transition-colors hover:bg-blue-700"
+              >
+                Start chatting
+              </Link>
+                
+              <Link to="/login"
+                className="inline-block rounded-lg border border-neutral-600 px-5 py-3 font-semibold text-neutral-100 shadow-sm transition-colors hover:bg-neutral-800"
+              >
+                Sign in
+              </Link>
             </div>
           </div>
         </div>
