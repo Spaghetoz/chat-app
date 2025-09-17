@@ -2,14 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const initSockets = require("./socket");
+const initSockets = require("./sockets");
 
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
 
-const sequelize = require("./db");
+const sequelize = require("./config/db");
 const User = require("./models/user.model");
 
 sequelize.sync({ alter: true })
@@ -32,13 +32,13 @@ app.get("/users", async (req, res) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"]
   }
 });
 
 initSockets(io)
 
-server.listen(4000, () => {
+server.listen(process.env.PORT, () => {
   console.log("server on");
 });
