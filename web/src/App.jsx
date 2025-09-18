@@ -1,44 +1,51 @@
+import { BrowserRouter, Routes, Route } from "react-router";
+
 import AppLayout from "./layouts/AppLayout";
 import LandingLayout from "./layouts/LandingLayout";
+import AuthLayout from "./layouts/AuthLayout";
 
 import ChatPage from "./pages/app/ChatPage"
 import HomePage from "./pages/ui/HomePage"
 import NotFoundPage from "./pages/ui/NotFoundPage"
-import RegisterPage from "./pages/auth/RegisterPage";
-import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./features/auth/pages/RegisterPage";
+import LoginPage from "./features/auth/pages/LoginPage";
+import LogoutPage from "./features/auth/pages/LogoutPage";
 
-import { BrowserRouter, Routes, Route } from "react-router";
+import PrivateRoute from "./components/PrivateRoute";
 
+import { AuthProvider } from "./features/auth/hooks/useAuth";
 import {ChatProvider} from "./features/chat/contexts/ChatContext"
-import AuthLayout from "./layouts/AuthLayout";
 
 export default function App() {
   
   return(
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout/>}>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout/>}>
 
-          <Route path="/" element={
-            <ChatProvider>
-              <ChatPage/>
-            </ChatProvider>
-          }
-          />
+            <Route path="/" element={
+              <PrivateRoute>
+                <ChatProvider><ChatPage/></ChatProvider>
+              </PrivateRoute>
+            }
+            />
 
-        </Route>
+          </Route>
 
-        <Route element={<LandingLayout/>}>
-          <Route path="/home" element={<HomePage/>} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-        
-        <Route element={<AuthLayout/>}>
-          <Route path="/register" element={<RegisterPage/>}/>
-          <Route path="/login" element={<LoginPage/>}/>
-        </Route>
-        
-      </Routes>
-    </BrowserRouter>
+          <Route element={<LandingLayout/>}>
+            <Route path="/home" element={<HomePage/>} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+          
+          <Route element={<AuthLayout/>}>
+            <Route path="/register" element={<RegisterPage/>}/>
+            <Route path="/login" element={<LoginPage/>}/>
+            <Route path="/logout" element={<LogoutPage/>}></Route>
+          </Route>
+          
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }

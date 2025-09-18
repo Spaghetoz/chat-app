@@ -19,4 +19,13 @@ app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => res.json({ ok: true }));
 
+//todo move
+const { requireAuth } = require('./middleware/auth.middleware');
+app.get('/profile', requireAuth, (req, res) => {
+    res.json({
+        message: 'Protected route',
+        user: req.user
+    });
+});
+
 module.exports = app;
