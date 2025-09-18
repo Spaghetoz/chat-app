@@ -2,7 +2,7 @@
 
 function initWhiteboard(io) {
     
-    const whiteboardNamespace = io.of("/")
+    const whiteboardNamespace = io.of("/whiteboard")
     
     // TODO classe/object board in typescript
     let boardContent = []

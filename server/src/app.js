@@ -1,44 +1,22 @@
-require("dotenv").config();
 const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const initSockets = require("./sockets");
+const helmet = require('helmet');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
+const authRoutes = require('./routes/auth.route');
 
 const app = express();
-const server = http.createServer(app);
 
+app.use(helmet());
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
-const sequelize = require("./config/db");
-const User = require("./models/user.model");
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
 
-sequelize.sync({ alter: true })
-  .then(() => console.log("Syncronized tables"));
+app.use('/auth', authRoutes);
 
-app.post("/users", async (req, res) => {
-  try {
-    const user = await User.create(req.body);
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+app.get('/', (req, res) => res.json({ ok: true }));
 
-app.get("/users", async (req, res) => {
-  const users = await User.findAll();
-  res.json(users);
-});
-
-
-const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST"]
-  }
-});
-
-initSockets(io)
-
-server.listen(process.env.PORT, () => {
-  console.log("server on");
-});
+module.exports = app;
