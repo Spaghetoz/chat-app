@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 
 import AppLayout from "./layouts/AppLayout";
 import LandingLayout from "./layouts/LandingLayout";
@@ -11,10 +11,10 @@ import RegisterPage from "./features/auth/pages/RegisterPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 import LogoutPage from "./features/auth/pages/LogoutPage";
 
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./features/auth/components/PrivateRoute";
 
 import { AuthProvider } from "./features/auth/hooks/useAuth";
-import {ChatProvider} from "./features/chat/contexts/ChatContext"
+import { ChatProvider } from "./features/chat/contexts/ChatContext"
 
 export default function App() {
   
@@ -22,15 +22,13 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+
           <Route element={<AppLayout/>}>
-
-            <Route path="/" element={
-              <PrivateRoute>
-                <ChatProvider><ChatPage/></ChatProvider>
-              </PrivateRoute>
-            }
-            />
-
+            <Route element={<PrivateRoute />}>
+                <Route path="/" element={
+                  <ChatProvider><ChatPage/></ChatProvider>
+                }/>
+              </Route>
           </Route>
 
           <Route element={<LandingLayout/>}>

@@ -1,9 +1,8 @@
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:4000/whiteboard");
-
 export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, setBoardSize) {
+  const socketRef = useRef()
   const positionRef = useRef({ x: 0, y: 0 });
 
   const _loadBoard = (boardContent) => {
@@ -17,13 +16,18 @@ export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, set
   }
 
   useEffect(() => {
+    
+    socketRef.current = io("http://localhost:4000/whiteboard", {
+      auth: { token: window.__ACCESS_TOKEN__ },
+    });
+
     const interval = setInterval(() => {
-      socket.emit("updateUserPos", positionRef.current);
+      socketRef.current?.emit("updateUserPos", positionRef.current);
     }, 10);
 
-    socket.emit("init")
+    socketRef.current?.emit("init")
 
-    socket.on("init", ({ boardContent, userPositions, boardSize }) => {
+    socketRef.current?.on("init", ({ boardContent, userPositions, boardSize }) => {
 
       _loadBoard(boardContent)
 
@@ -31,15 +35,15 @@ export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, set
       setBoardSize(boardSize);
     });
 
-    socket.on("updateUserPos", ({ userId, pos }) => {
+    socketRef.current?.on("updateUserPos", ({ userId, pos }) => {
       setUsersPos((prev) => ({ ...prev, [userId]: pos }));
     });
     
-    socket.on("clearBoard", () => {
+    socketRef.current?.on("clearBoard", () => {
       setBoardContent([])
     })
 
-    socket.on("userDisconnection", ({ userId }) => {
+    socketRef.current?.on("userDisconnection", ({ userId }) => {
       setUsersPos((prev) => {
         const newUsers = { ...prev };
         delete newUsers[userId];
@@ -47,17 +51,18 @@ export function useSocketDrawing(boardContent, setBoardContent, setUsersPos, set
       });
     });
 
-    socket.on("draw", (item) => {
+    socketRef.current?.on("draw", (item) => {
       _drawItem(item)
     });
 
     return () => {
       clearInterval(interval);
-      socket.off("draw");
-      socket.off("updateUserPos");
-      socket.off("userDisconnection");
+      socketRef.current?.off("draw");
+      socketRef.current?.off("updateUserPos");
+      socketRef.current?.off("userDisconnection");
+      socketRef.current?.disconnect()
     };
   }, []);
 
-  return { socket, positionRef };
+  return { socket: socketRef.current, positionRef };
 }

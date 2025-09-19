@@ -11,17 +11,16 @@ export function AuthProvider({ children }) {
   
   useEffect(() => {
     // Fetching user when the page loads
-    async function fetchUser() {
+    async function initAuth() {
       try {
-        const res = await api.get('/profile', { withCredentials: true });
-        setUser(res.data.user);
+        await refresh();
       } catch (err) {
         setUser(null);
       } finally {
-        setCheckingAuth(false)
+        setCheckingAuth(false);
       }
     }
-    fetchUser();
+    initAuth();
   }, []);
 
   async function login(email, password) {

@@ -1,30 +1,35 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
 export const ChatContext = createContext();
-const chatSocket = io('http://localhost:4000/chat');
 
 export function ChatProvider({ children }) {
+  const socketRef = useRef()
   const [chat, setChat] = useState([]);
   const [privateMessages, setPrivateMessages] = useState({})
 
-  useEffect(() => {
-    chatSocket.emit("load_last_messages")
+  useEffect(() => {    
     
-    chatSocket.on("load_last_messages", (messages) => {
+    socketRef.current = io("http://localhost:4000/chat", {
+      auth: { token: window.__ACCESS_TOKEN__ },
+    });
+
+    socketRef.current?.emit("load_last_messages")
+    
+    socketRef.current?.on("load_last_messages", (messages) => {
       setChat(messages)
     })
 
-    chatSocket.on("load_private_messages", (messages) => {
+    socketRef.current?.on("load_private_messages", (messages) => {
 
     })
     
     // TODO add to state before sending instead of when receiving from server
-    chatSocket.on('receive_message', (data) => {
+    socketRef.current?.on('receive_message', (data) => {
       setChat((prev) => [...prev, data]);
     });
 
-    chatSocket.on('receive_private_message', (message) => {
+    socketRef.current?.on('receive_private_message', (message) => {
       console.log("mp received")
       setPrivateMessages(prev => ({
         ...prev,
@@ -33,15 +38,19 @@ export function ChatProvider({ children }) {
     })
 
     return () => {
-      chatSocket.off('load_last_messages')
-      chatSocket.off("load_private_messages")
-      chatSocket.off('receive_message'); // TODO off all sockets
-      chatSocket.off("receive_private_messages")
+      socketRef.current?.off('load_last_messages')
+      socketRef.current?.off("load_private_messages")
+      socketRef.current?.off('receive_message'); // TODO off all sockets
+      socketRef.current?.off("receive_private_messages")
+      socketRef.current?.disconnect()
     }
   }, []);
 
+  // Do not use the chat socket before it is connected
+  if (!socketRef.current) return <div>Connecting to chat...</div>; 
+
   return (
-    <ChatContext.Provider value={{ chatSocket, chat, setChat, privateMessages, setPrivateMessages }}>
+    <ChatContext.Provider value={{ chatSocket: socketRef.current, chat, setChat, privateMessages, setPrivateMessages }}>
       {children}
     </ChatContext.Provider>
   )
