@@ -11,18 +11,26 @@ const io = new Server(server, {
   cors: { origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true },
 });
 
-// Socket io jwt middleware
-io.use(async (socket, next) => {
 
+const socketAuthMiddleware = (socket, next) => {
   try {
     const token = socket.handshake.auth?.token;
-    if (!token) return next(new Error('No token'));
+    if (!token) {
+      // TODO show error to client
+      return next(new Error('No token'));
+    }
     const payload = require('jsonwebtoken').verify(token, process.env.JWT_ACCESS_SECRET);
-    socket.user = { id: payload.sub, email: payload.email };
+    socket.user = { id: payload.sub, email: payload.email }; // TODO change Id by public id
     next();
   } catch (err) {
     next(new Error('Invalid token'));
   }
+}
+
+// Add auth middleware on all the namespaces
+io.use(socketAuthMiddleware);
+io.on("new_namespace", (namespace) => {
+  namespace.use(socketAuthMiddleware);
 });
 
 initSockets(io);

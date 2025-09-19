@@ -10,7 +10,7 @@ function initWhiteboard(io) {
     let boardSize = {width: 1000, height: 800}
 
     whiteboardNamespace.on("connection", (socket) => {
-        console.log("connect:", socket.id);
+        console.log("connect on whiteboard: ", socket.id, " and user id:", socket.user.id );
 
         socket.on("init", () => {
             socket.emit("init", {boardContent, userPositions, boardSize})
