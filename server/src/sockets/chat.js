@@ -9,10 +9,10 @@ function initChat(io) {
     let privateMessages = []
 
     chatNamespace.on("connection" , (socket) => {
-        console.log("connect on chat", socket.id)
+        console.log("connect on chat", socket.user.public_id)
         //todo user id
         // User joins his room to be able to receive direct messages
-        socket.join(socket.id)
+        socket.join(socket.user.public_id)
 
         socket.on("load_last_messages", () => {
             const messagesLimit = 20
@@ -27,7 +27,7 @@ function initChat(io) {
 
             const message = {
                 id: Object.keys(messages).length, // TODO uuid
-                senderId: socket.id,
+                senderId: socket.user.public_id,
                 text: messageText,
                 reactions: {},
                 chatType: chatType,
@@ -50,14 +50,14 @@ function initChat(io) {
         });
 
         socket.on("user_typing", () => {
-            socket.broadcast.emit("user_typing", {userId: socket.id, lastTyping: Date.now()})
+            socket.broadcast.emit("user_typing", {userId: socket.user.public_id, lastTyping: Date.now()})
         })
         socket.on("user_stop_typing", () => {
-            socket.broadcast.emit("user_stop_typing", {userId: socket.id})
+            socket.broadcast.emit("user_stop_typing", {userId: socket.user.public_id})
         })
 
         socket.on('disconnect', () => {
-            socket.broadcast.emit("user_stop_typing", {userId: socket.id})
+            socket.broadcast.emit("user_stop_typing", {userId: socket.user.public_id})
         });
     })
 }

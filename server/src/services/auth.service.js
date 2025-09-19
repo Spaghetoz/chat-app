@@ -18,7 +18,7 @@ function parseDurationToMs(str) {
 }
 
 function generateAccessToken(user) {
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.public_id };
     return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: ACCESS_EXPIRES });
 }
 
@@ -31,7 +31,7 @@ async function createUser(email, password) {
     if (existing) throw new Error('Email already used');
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await User.create({ email, passwordHash });
-    return { id: user.id, email: user.email };
+    return { public_id: user.public_id };
 }
 
 async function findUserByEmail(email) {
@@ -70,7 +70,7 @@ async function login(email, password, ip, ua) {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshTokenPlain();
     await saveRefreshToken(user.id, refreshToken, ip, ua);
-    return { accessToken, refreshToken, user: { id: user.id, email: user.email } };
+    return { accessToken, refreshToken, user: { public_id: user.public_id } }; // todo username
 }
 
 async function refresh(oldRefreshToken) {
@@ -85,7 +85,7 @@ async function refresh(oldRefreshToken) {
 
     const newRefreshToken = await rotateRefreshToken(oldRefreshToken, user.id, tokenRow.ip, tokenRow.userAgent);
     const accessToken = generateAccessToken(user);
-    return { accessToken, refreshToken: newRefreshToken, user: { id: user.id, email: user.email } };
+    return { accessToken, refreshToken: newRefreshToken, user: { public_id: user.public_id } };
 }
 
 module.exports = { createUser, login, refresh, revokeRefreshToken };

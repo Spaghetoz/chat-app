@@ -20,7 +20,7 @@ const socketAuthMiddleware = (socket, next) => {
       return next(new Error('No token'));
     }
     const payload = require('jsonwebtoken').verify(token, process.env.JWT_ACCESS_SECRET);
-    socket.user = { id: payload.sub, email: payload.email }; // TODO change Id by public id
+    socket.user = { public_id: payload.sub };
     next();
   } catch (err) {
     next(new Error('Invalid token'));

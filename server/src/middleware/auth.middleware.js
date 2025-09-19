@@ -7,7 +7,7 @@ function requireAuth(req, res, next) {
     const token = m[1];
     try {
         const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-        req.user = { id: payload.sub, email: payload.email };
+        req.user = { public_id: payload.sub };
         next();
     } catch (err) {
         return res.status(401).json({ error: 'Invalid token' });

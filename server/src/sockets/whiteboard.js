@@ -10,13 +10,13 @@ function initWhiteboard(io) {
     let boardSize = {width: 1000, height: 800}
 
     whiteboardNamespace.on("connection", (socket) => {
-        console.log("connect on whiteboard: ", socket.id, " and user id:", socket.user.id );
+        console.log("connect on whiteboard: ", socket.id, " and user id:", socket.user.public_id );
 
         socket.on("init", () => {
             socket.emit("init", {boardContent, userPositions, boardSize})
         })
         
-        socket.broadcast.emit("userConnection", { userId: socket.id });
+        socket.broadcast.emit("userConnection", { userId: socket.user.public_id });
 
         socket.on("draw", (item) => {
 
@@ -26,8 +26,8 @@ function initWhiteboard(io) {
         })
 
         socket.on("updateUserPos", (pos) => {
-            userPositions[socket.id] = pos;
-            socket.broadcast.emit("updateUserPos", { userId: socket.id, pos });
+            userPositions[socket.user.public_id] = pos;
+            socket.broadcast.emit("updateUserPos", { userId: socket.user.public_id, pos });
         })
 
         socket.on("clearBoard", () => {
@@ -37,10 +37,10 @@ function initWhiteboard(io) {
 
         socket.on("disconnect", () => {
 
-            delete userPositions[socket.id];
-            socket.broadcast.emit("userDisconnection", { userId: socket.id });
+            delete userPositions[socket.user.public_id];
+            socket.broadcast.emit("userDisconnection", { userId: socket.user.public_id });
 
-            console.log("disconnect :", socket.id);
+            console.log("disconnect :", socket.user.public_id);
         });
     }
 )}
