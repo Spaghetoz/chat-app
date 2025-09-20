@@ -10,15 +10,15 @@ export default function useTypingIndicator() {
 
     const {chatSocket} = useContext(ChatContext)
   
-    const userStoppedTyping = (userId) => {
-      return typingUsers[userId].lastTyping < (Date.now() - TYPING_TIMEOUT_IN_MS)
+    const userStoppedTyping = (username) => {
+      return typingUsers[username].lastTyping < (Date.now() - TYPING_TIMEOUT_IN_MS)
     }
 
-    const stopUserTyping = (userId) => {
-      if (!userId) return;
+    const stopUserTyping = (username) => {
+      if (!username) return;
       setTypingUsers(prev => {
-        if (!(userId in prev)) return prev;
-        const { [userId]: _, ...rest } = prev;
+        if (!(username in prev)) return prev;
+        const { [username]: _, ...rest } = prev;
         return rest;
       });
     }
@@ -26,7 +26,7 @@ export default function useTypingIndicator() {
     const addTypingUser = (userData) => {
       setTypingUsers(prev => ({
         ...prev,
-        [userData.userId]: {lastTyping: userData.lastTyping}
+        [userData.username]: {lastTyping: userData.lastTyping}
       }));
     }
     
@@ -74,7 +74,7 @@ export default function useTypingIndicator() {
           addTypingUser(data)
         })
         chatSocket.on('user_stop_typing', (data) => {
-          stopUserTyping(data.userId)
+          stopUserTyping(data.username)
         })
     
         return () => {

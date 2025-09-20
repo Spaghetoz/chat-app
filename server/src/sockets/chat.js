@@ -50,14 +50,14 @@ function initChat(io) {
         });
 
         socket.on("user_typing", () => {
-            socket.broadcast.emit("user_typing", {userId: socket.user.public_id, lastTyping: Date.now()})
+            socket.broadcast.emit("user_typing", {username: socket.user.username, lastTyping: Date.now()})
         })
         socket.on("user_stop_typing", () => {
-            socket.broadcast.emit("user_stop_typing", {userId: socket.user.public_id})
+            socket.broadcast.emit("user_stop_typing", {username: socket.user.username})
         })
 
         socket.on('disconnect', () => {
-            socket.broadcast.emit("user_stop_typing", {userId: socket.user.public_id})
+            socket.broadcast.emit("user_stop_typing", {username: socket.user.username})
         });
     })
 }
