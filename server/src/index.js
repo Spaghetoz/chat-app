@@ -5,27 +5,13 @@ const app = require('./app');
 const { sequelize } = require('./models');
 const initSockets = require('./sockets');
 
+const { socketAuthMiddleware } = require('./middleware/auth.middleware');
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: { origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true },
 });
-
-
-const socketAuthMiddleware = (socket, next) => {
-  try {
-    const token = socket.handshake.auth?.token;
-    if (!token) {
-      // TODO show error to client
-      return next(new Error('No token'));
-    }
-    const payload = require('jsonwebtoken').verify(token, process.env.JWT_ACCESS_SECRET);
-    socket.user = { public_id: payload.sub };
-    next();
-  } catch (err) {
-    next(new Error('Invalid token'));
-  }
-}
 
 // Add auth middleware on all the namespaces
 io.use(socketAuthMiddleware);

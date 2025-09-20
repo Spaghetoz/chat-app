@@ -10,9 +10,9 @@ const COOKIE_OPTIONS = (maxAgeMs) => ({
 
 async function register(req, res) {
     try {
-        const { email, password } = req.body;
-        if (!email || !password) return res.status(400).json({ error: 'Email + password required' });
-        const user = await authService.createUser(email, password);
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) return res.status(400).json({ error: 'Username + Email + password required' });
+        const user = await authService.createUser(username, email, password);
         res.status(201).json({ user });
     } catch (err) {
         res.status(400).json({ error: err.message });

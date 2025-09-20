@@ -9,7 +9,7 @@ function initChat(io) {
     let privateMessages = []
 
     chatNamespace.on("connection" , (socket) => {
-        console.log("connect on chat", socket.user.public_id)
+        console.log("connect on chat", socket.user.public_id, socket.user.username)
         //todo user id
         // User joins his room to be able to receive direct messages
         socket.join(socket.user.public_id)

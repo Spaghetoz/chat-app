@@ -5,6 +5,7 @@ import { NavLink, useNavigate  } from "react-router";
 // TODO refactor to avoid duplication with loginpage
 export default function RegisterPage() {
 
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = useAuth();
@@ -13,7 +14,7 @@ export default function RegisterPage() {
   async function handle(e) {
     e.preventDefault();
     try {
-      await auth.register(email, password);
+      await auth.register(username, email, password);
       await auth.login(email, password);
       navigate('/');   
     } catch (err) {
@@ -28,6 +29,18 @@ export default function RegisterPage() {
       </h1>
 
       <form className="space-y-4" onSubmit={handle}>
+
+        <div>
+          <label className="block text-sm text-neutral-300">Username</label>
+          <input
+            type="text" 
+            placeholder="Username"
+            value={username} 
+            onChange={e => setUsername(e.target.value)}
+            className="mt-1 w-full rounded-md border border-neutral-600 bg-neutral-900 px-3 py-2 text-neutral-100 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
         <div>
           <label className="block text-sm text-neutral-300">Email</label>
           <input

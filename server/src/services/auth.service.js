@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const { hashToken } = require('../utils/crypto');
+const { isValidUsername } = require('../utils/validators');
 
 const ACCESS_EXPIRES = process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
 const REFRESH_EXPIRES = process.env.REFRESH_TOKEN_EXPIRES_IN || '30d';
@@ -26,12 +27,18 @@ function generateRefreshTokenPlain() {
     return uuidv4() + ':' + uuidv4();
 }
 
-async function createUser(email, password) {
-    const existing = await User.findOne({ where: { email } });
-    if (existing) throw new Error('Email already used');
+async function createUser(username, email, password) {
+    if (!isValidUsername(username)) throw new Error('Invalid username');
+
+    const existingEmail = await User.findOne({ where: { email } });
+    if (existingEmail) throw new Error('Email already used');
+
+    const existingUsername = await User.findOne({ where: { username } });
+    if (existingUsername) throw new Error('Username already used');
+
     const passwordHash = await bcrypt.hash(password, 12);
-    const user = await User.create({ email, passwordHash });
-    return { public_id: user.public_id };
+    const user = await User.create({ username, email, passwordHash });
+    return { public_id: user.public_id, username: user.username };
 }
 
 async function findUserByEmail(email) {
@@ -70,7 +77,7 @@ async function login(email, password, ip, ua) {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshTokenPlain();
     await saveRefreshToken(user.id, refreshToken, ip, ua);
-    return { accessToken, refreshToken, user: { public_id: user.public_id } }; // todo username
+    return { accessToken, refreshToken, user: { public_id: user.public_id, username: user.username  } }; 
 }
 
 async function refresh(oldRefreshToken) {
@@ -85,7 +92,7 @@ async function refresh(oldRefreshToken) {
 
     const newRefreshToken = await rotateRefreshToken(oldRefreshToken, user.id, tokenRow.ip, tokenRow.userAgent);
     const accessToken = generateAccessToken(user);
-    return { accessToken, refreshToken: newRefreshToken, user: { public_id: user.public_id } };
+    return { accessToken, refreshToken: newRefreshToken, user: { public_id: user.public_id, username: user.username  } };
 }
 
 module.exports = { createUser, login, refresh, revokeRefreshToken };
