@@ -2,46 +2,35 @@
 
 A real-time chat application built with Express, Socket.io, and React, featuring a collaborative whiteboard.
 
-## ✨ Features
+### Features
 
 - Real-time chat 
 - Collaborative whiteboard
+- JWT Auth system
 
-## 🛠 Technologies Used
+### Technologies Used
 
-- Backend: Express, Socket.io
-- Frontend: React, Socket.io-client, Konva
-- Others: Node.js, npm, vite
+- Backend: **ExpressJS**, **Socket.io**, **PostgreSQL**
+- Frontend: **React**, **Konva**
+- Others: **Node.js**, **npm**, **vite**
 
-## 🚀 Installation
+## 🛠️ Installation
 
-Clone the repository:
+## Prerequisites
+- Docker & Docker Compose
+- Node.js & npm (for the frontend)
+
+## Clone the repository:
 ```
 git clone https://github.com/Spaghetoz/web-whiteboard.git
 cd web-whiteboard
 ```
-### Install the dependencies:
-Install server dependencies:
-```
-cd server
-npm install
-```
+### Run the backend :
+1. Navigate to the /server folder: `cd server`
+2. And start the backend using Docker compose: `docker compose up --build`
 
-Install frontend dependencies:
-```
-cd ../web
-npm install
-```
+### Run the frontend :
+1. Navigate to the /web folder: `cd web`
+2. And similarly, start the frontend using Docker compose: `docker compose up --build`
 
-### Run the application:
-Start the server :
-```
-cd server
-npm run dev
-```
-Start the client in parallel :
-```
-cd web
-npm run dev
-```
-And open your browser at http://localhost:5173
+And open the web app on your browser at http://localhost:5173
