@@ -22,8 +22,8 @@ A real-time chat application built with Express, Socket.io, and React, featuring
 
 ## Clone the repository:
 ```
-git clone https://github.com/Spaghetoz/web-whiteboard.git
-cd web-whiteboard
+git clone https://github.com/Spaghetoz/chat-app.git
+cd chat-app
 ```
 ### Run the backend :
 1. Navigate to the /server folder: `cd server`
