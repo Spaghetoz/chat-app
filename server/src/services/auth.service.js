@@ -87,7 +87,7 @@ async function refresh(oldRefreshToken) {
     if (tokenRow.revoked) throw new Error('Token revoked');
     if (new Date(tokenRow.expiresAt) < new Date()) throw new Error('Token expired');
 
-    const user = await User.findByPk(tokenRow.userId);
+    const user = await User.findByPk(tokenRow.userId); // todo db call move to service
     if (!user) throw new Error('User not found');
 
     const newRefreshToken = await rotateRefreshToken(oldRefreshToken, user.id, tokenRow.ip, tokenRow.userAgent);

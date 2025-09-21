@@ -73,8 +73,8 @@ export default function ChatWindow({ chatType, toId, messages }) {
       </div>
       
       {typingText && 
-        <span class="text-neutral-200 italic p-3">
-          <span class="animate-pulse">{typingText}</span>
+        <span className="text-neutral-200 italic p-3">
+          <span className="animate-pulse">{typingText}</span>
         </span>
       }
       

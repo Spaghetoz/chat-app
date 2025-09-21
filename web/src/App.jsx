@@ -23,17 +23,17 @@ export default function App() {
       <BrowserRouter>
         <Routes>
 
+          <Route element={<LandingLayout/>}>
+            <Route path="/" element={<HomePage/>} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+
           <Route element={<AppLayout/>}>
             <Route element={<PrivateRoute />}>
-                <Route path="/" element={
+                <Route path="/app" element={
                   <ChatProvider><ChatPage/></ChatProvider>
                 }/>
               </Route>
-          </Route>
-
-          <Route element={<LandingLayout/>}>
-            <Route path="/home" element={<HomePage/>} />
-            <Route path="*" element={<NotFoundPage />} />
           </Route>
           
           <Route element={<AuthLayout/>}>

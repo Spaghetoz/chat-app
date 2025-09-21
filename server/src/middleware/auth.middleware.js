@@ -6,7 +6,7 @@ async function verifyTokenAndGetUser(token) {
 
     const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
-    const user = await User.findOne({ where: { public_id: payload.sub } });
+    const user = await User.findOne({ where: { public_id: payload.sub } }); // TODO move db call to service
     if (!user) throw new Error('User not found');
 
     return { public_id: user.public_id, username: user.username };

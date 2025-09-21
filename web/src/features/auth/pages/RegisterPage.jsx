@@ -16,7 +16,7 @@ export default function RegisterPage() {
     try {
       await auth.register(username, email, password);
       await auth.login(email, password);
-      navigate('/');   
+      navigate('/app');   
     } catch (err) {
       alert('Register failed: ' + err.response?.data?.error || err.message);
     }

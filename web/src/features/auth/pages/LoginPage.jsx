@@ -13,7 +13,7 @@ export default function LoginPage() {
     e.preventDefault();
     try { 
       await auth.login(email, password);
-      navigate('/');   
+      navigate('/app');   
     } catch (err) {
       alert('Login failed');
     }
