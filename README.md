@@ -32,6 +32,6 @@ cd chat-app
 
 ### Run the frontend :
 1. Navigate to the /web folder: `cd web`
-2. And similarly, start the frontend using Docker compose: `docker compose up --build`
+2. And similarly, start the frontend using Docker compose: `docker-compose up --build`
 
 And open the web app on your browser at http://localhost:5173
