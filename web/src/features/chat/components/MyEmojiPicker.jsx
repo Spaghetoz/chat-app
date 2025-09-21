@@ -5,6 +5,7 @@ import EmojiPicker from "emoji-picker-react";
 
 import { Button } from "../../../components/ui/button"
 
+//todo move this file somewhere else
 export default function MyEmojiPicker({onEmojiClick}) {
 
     const [isOpen, setIsOpen] = useState(false);

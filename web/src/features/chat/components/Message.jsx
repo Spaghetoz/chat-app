@@ -1,4 +1,6 @@
-export default function Message({ msg }) {
+import React from "react";
+
+function Message({ msg }) {
 
     const isMe = false // todo change
     return (
@@ -23,3 +25,6 @@ export default function Message({ msg }) {
       </div>
     );
 }
+
+// Exported with React.memo to skip re-rendering when props are unchanged. 
+export default React.memo(Message)

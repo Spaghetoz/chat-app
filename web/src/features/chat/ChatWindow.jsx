@@ -1,21 +1,19 @@
 import { useState, useEffect, useRef, useContext } from "react";
 
 import { Button } from "../../components/ui/button"
-import { Input } from "@/components/ui/input"
-import { SendHorizonal, Hash, Presentation  } from "lucide-react";
+import { Hash, Presentation  } from "lucide-react";
 
 import Message from "./components/Message";
 import useTypingIndicator from "./hooks/useTypingIndicator";
-import MyEmojiPicker from "./components/MyEmojiPicker";
 
 import { ChatContext } from "./contexts/ChatContext";
 
 import Whiteboard from "@/features/whiteboard/Whiteboard"; // TODO move outside
+import ChatInput from "./components/ChatInput";
 
 export default function ChatWindow({ chatType, toId, messages }) {
 
-  const [messageText, setMessageText] = useState('');
-  const {chatSocket} = useContext(ChatContext)
+  const { chatSocket } = useContext(ChatContext)
   const { typingText, sendTyping, sendStopTyping } = useTypingIndicator();
 
   // TODO move whiteboard opening outside of ChatWindow (for example in Homepage)
@@ -25,26 +23,22 @@ export default function ChatWindow({ chatType, toId, messages }) {
   }
 
   const endRef = useRef(null);
-    useEffect(() => {
+  useEffect(() => {
+    if (messages.length > 0) {
       endRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages, toId]);
 
 
-  const sendMessage = () => {
+  const sendMessage = (messageText) => {
     if (messageText.trim() !== '') {
-      chatSocket.emit('send_message', {messageText: messageText, chatType: chatType, toId:toId});
-      setMessageText('');
+      chatSocket.emit('send_message', {messageText, chatType: chatType, toId:toId});
     }
   };
 
-  const handleSendMessage = () => {
-    sendMessage()
+  const handleSendMessage = (messageText) => {
+    sendMessage(messageText)
     sendStopTyping()
-  }
-
-  const handleEmojiSelection = (emoji) => {
-    //TODO insert at cursor pos
-    setMessageText(prev => prev + emoji)
   }
 
   return (
@@ -61,9 +55,9 @@ export default function ChatWindow({ chatType, toId, messages }) {
       {/* Messages List */}
       <div className="flex-1 overflow-auto p-6 min-h-0">
         <div className="flex flex-col gap-4">
-          {messages.map((msg, i) => (
+          {messages.map((msg) => (
             <Message
-              key={i}
+              key={msg.id}
               msg={msg}
               chatSocket={chatSocket}
             />
@@ -78,29 +72,7 @@ export default function ChatWindow({ chatType, toId, messages }) {
         </span>
       }
       
-      {/* Message typing box */}
-      <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-950 flex items-start gap-4">
-        <div className="flex flex-1 flex-row gap-2 ">
-          <Input
-            value={messageText}
-            onChange={(e) => {
-              setMessageText(e.target.value)
-              sendTyping()
-            }}
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            placeholder={`${chatType} message to #${toId}`}
-            className="border-none bg-neutral-800 h-12 !text-[15px]"
-          />
-          <div className="flex items-center justify-between mt-2 gap-2">
-            <div className="flex items-center gap-2">
-              <MyEmojiPicker onEmojiClick={emoji => handleEmojiSelection(emoji)}/>
-            </div>
-            <div>
-              <Button onClick={handleSendMessage}><SendHorizonal/></Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ChatInput onSend={(text) => handleSendMessage(text)} onTyping={sendTyping}/>
 
       {showWhiteboard && <Whiteboard/>}
     </div>
