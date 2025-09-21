@@ -27,7 +27,8 @@ cd chat-app
 ```
 ### Run the backend :
 1. Navigate to the /server folder: `cd server`
-2. And start the backend using Docker compose: `docker compose up --build`
+2. Rename `.env.example` to `.env` and edit it with your configuration
+3. And start the backend using Docker compose: `docker-compose up --build`
 
 ### Run the frontend :
 1. Navigate to the /web folder: `cd web`
