@@ -13,6 +13,9 @@ services:
     ports:
       - "${PORT}:${PORT}"
     restart: unless-stopped
+    volumes: 
+      - .:/app  # enables hot reload with docker
+      - /app/node_modules # same
 
   db:
     image: postgres:15-alpine
