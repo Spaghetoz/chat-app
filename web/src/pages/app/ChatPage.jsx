@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 
 import MemberList from "../../features/chat/components/MemberList";
 
-import ChatWindow from "../../features/chat/ChatWindow";
+import ChatWindow from "../../features/chat/components/ChatWindow/ChatWindow";
 import { ChatContext } from "../../features/chat/contexts/ChatContext";
 import ChatSidebar from "../../features/chat/components/ChatSidebar/ChatSidebar";
 
@@ -17,16 +17,6 @@ export default function ChatPage() {
 
   const {chat, privateMessages} = useContext(ChatContext)
 
-  const [activeDiscussionId, setActiveDiscussionId] = useState("")
-  const [chatType, setChatType] = useState("global")
-
-  
-  const messagesToDisplay = (() => {
-    if (chatType === "global") return chat;
-    if (chatType === "private") return privateMessages[activeDiscussionId] || [];
-    return [];
-  })();
-
   return (
     <div className="h-screen flex bg-neutral-900 text-neutral-100">
 
@@ -36,9 +26,9 @@ export default function ChatPage() {
 
         <div className="flex-1 flex flex-col">
           <ChatWindow 
-            chatType={chatType} 
-            toId={activeDiscussionId} 
-            messages={messagesToDisplay}/>
+            chatType=""
+            toId=""
+            messages={chat}/>
         </div>
 
         <MemberList members={members} />

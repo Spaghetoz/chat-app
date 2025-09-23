@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-import MyEmojiPicker from "./MyEmojiPicker"
+import MyEmojiPicker from "../MyEmojiPicker"
 import { SendHorizonal } from "lucide-react";
 
 export default function ChatInput({onSend, onTyping}) {
@@ -26,7 +26,7 @@ export default function ChatInput({onSend, onTyping}) {
     }
 
     return(
-        <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-950 flex items-start gap-4">
+        <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-900 flex items-start gap-4">
             <div className="flex flex-1 flex-row gap-2 ">
                 <Input
                     value={messageText}

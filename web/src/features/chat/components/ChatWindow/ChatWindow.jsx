@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef, useContext } from "react";
 
-import { Button } from "../../components/ui/button"
+import { Button } from "../../../../components/ui/button"
 import { Hash, Presentation  } from "lucide-react";
 
-import Message from "./components/Message";
-import useTypingIndicator from "./hooks/useTypingIndicator";
+import Message from "./Message";
+import useTypingIndicator from "../../hooks/useTypingIndicator";
 
-import { ChatContext } from "./contexts/ChatContext";
+import { ChatContext } from "../../contexts/ChatContext";
 
 import Whiteboard from "@/features/whiteboard/Whiteboard"; // TODO move outside
-import ChatInput from "./components/ChatInput";
+import ChatInput from "./ChatInput";
 
 export default function ChatWindow({ chatType, toId, messages }) {
 
