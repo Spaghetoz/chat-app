@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
-import UserCard from "./UserCard";
+
 import SearchBar from "./SearchBar";
 import ChatSection from "./ChatSection";
+import UserProfileCard from "./UserProfileCard";
+
+import Avatar from "../../../../components/Avatar";
+import Popover from "../../../../components/Popover";
+
+import { Settings } from "lucide-react";
 
 export default function ChatSidebar() {
 
@@ -35,7 +41,23 @@ export default function ChatSidebar() {
 
       </div>
 
-      <UserCard />
+      <Popover trigger={   
+        // User card used as a popover trigger    
+        // TODO fix trigger working if we click outside box (p-2)
+        <div className="p-2"> 
+            <div className="p-4 h-16 rounded-xl bg-neutral-800 hover:bg-neutral-700 flex items-center cursor-pointer">
+                <Avatar width={9}/>
+                <div className="flex-1 ml-3">
+                <p className="text-sm font-semibold">Username</p>
+                <p className="text-xs text-gray-400">Online</p>
+                </div>
+                <Settings className="cursor-pointer text-neutral-400 hover:text-neutral-200 w-5" />
+            </div>
+        </div>}>
+
+        <UserProfileCard/>
+
+      </Popover>
     </div>
   );
 };
