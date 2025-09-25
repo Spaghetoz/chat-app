@@ -3,7 +3,7 @@ import Avatar from "../../../../components/Avatar";
 
 import { useNavigate } from "react-router";
 
-export default function UserProfileCard() {
+export default function YourProfileCard() {
 
   const navigate = useNavigate();
 

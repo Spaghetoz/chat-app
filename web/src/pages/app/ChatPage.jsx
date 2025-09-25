@@ -1,19 +1,11 @@
-import { useContext, useState } from "react";
-
-import MemberList from "../../features/chat/components/MemberList";
+import { useContext } from "react";
 
 import ChatWindow from "../../features/chat/components/ChatWindow/ChatWindow";
 import { ChatContext } from "../../features/chat/contexts/ChatContext";
 import ChatSidebar from "../../features/chat/components/ChatSidebar/ChatSidebar";
-
-const initialMembers = [
-  { id: "u1", name: "Alice", status: "online" },
-  { id: "u2", name: "Bob", status: "idle" },
-  { id: "u3", name: "Charlie", status: "offline" },
-];
+import RightSidebar from "../../features/chat/components/RightSidebar/RightSidebar"
 
 export default function ChatPage() {
-  const [members] = useState(initialMembers);
 
   const {chat, privateMessages} = useContext(ChatContext)
 
@@ -31,7 +23,8 @@ export default function ChatPage() {
             messages={chat}/>
         </div>
 
-        <MemberList members={members} />
+        {/* TODO button to open/close from the chatwindow header */}
+        <RightSidebar />
       </div>
     </div>
   );
