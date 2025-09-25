@@ -1,5 +1,13 @@
 # 💬 Chat App with Whiteboard ✏️
 
+![Last Commit](https://img.shields.io/github/last-commit/Spaghetoz/chat-app?style=flat-square)
+![Commits](https://img.shields.io/github/commit-activity/m/Spaghetoz/chat-app?style=flat-square)
+[![Postgres](https://img.shields.io/badge/Postgres-%23316192.svg?logo=postgresql&logoColor=white)](#)
+[![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?logo=express&logoColor=%2361DAFB)](#)
+[![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
+[![NodeJS](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](#)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#)
+
 A real-time chat application built with Express, Socket.io, and React, featuring a collaborative whiteboard.
 
 ### Features
