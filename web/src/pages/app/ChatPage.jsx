@@ -1,13 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import ChatWindow from "../../features/chat/components/ChatWindow/ChatWindow";
 import { ChatContext } from "../../features/chat/contexts/ChatContext";
 import ChatSidebar from "../../features/chat/components/ChatSidebar/ChatSidebar";
-import RightSidebar from "../../features/chat/components/RightSidebar/RightSidebar"
+
+import Whiteboard from "@/features/whiteboard/Whiteboard";
 
 export default function ChatPage() {
 
   const {chat, privateMessages} = useContext(ChatContext)
+  
+  const [showWhiteboard, setShowWhiteboard] = useState(false);
 
   return (
     <div className="h-screen flex bg-neutral-900 text-neutral-100">
@@ -20,11 +23,12 @@ export default function ChatPage() {
           <ChatWindow 
             chatType=""
             toId=""
-            messages={chat}/>
+            messages={chat}
+            onToggleWhiteboard={() => setShowWhiteboard(!showWhiteboard)} 
+          />
         </div>
 
-        {/* TODO button to open/close from the chatwindow header */}
-        <RightSidebar />
+        {showWhiteboard && <Whiteboard/>}
       </div>
     </div>
   );
