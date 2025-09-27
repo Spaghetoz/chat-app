@@ -1,7 +1,6 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import useTypingIndicator from "../../hooks/useTypingIndicator";
-import { ChatContext } from "../../contexts/ChatContext";
 
 import ChatInput from "./ChatInput";
 import RightSidebar from "../RightSidebar/RightSidebar"
@@ -10,21 +9,9 @@ import MessagesList from "./MessagesList";
 
 export default function ChatWindow({ chatType, toId, messages, onToggleWhiteboard }) {
 
-  const { chatSocket } = useContext(ChatContext)
-  const { typingText, sendTyping, sendStopTyping } = useTypingIndicator();
+  const { typingText, sendTyping } = useTypingIndicator();
 
   const [showRightBar, setShowRightBar] = useState(true);
-
-  const sendMessage = (messageText) => {
-    if (messageText.trim() !== '') {
-      chatSocket.emit('send_message', {messageText, chatType: chatType, toId:toId});
-    }
-  };
-
-  const handleSendMessage = (messageText) => {
-    sendMessage(messageText)
-    sendStopTyping()
-  }
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -46,7 +33,7 @@ export default function ChatWindow({ chatType, toId, messages, onToggleWhiteboar
             </span>
           }
           
-          <ChatInput onSend={handleSendMessage} onTyping={sendTyping}/>
+          <ChatInput chatType={chatType} toId={toId} onTyping={sendTyping}/>
         </div>
 
         {showRightBar && <RightSidebar/>}

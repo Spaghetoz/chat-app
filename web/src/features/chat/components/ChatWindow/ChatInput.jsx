@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { ChatContext } from "../../contexts/ChatContext";
 
 import MyEmojiPicker from "../MyEmojiPicker"
 import { SendHorizonal } from "lucide-react";
 
-export default function ChatInput({onSend, onTyping}) {
+import useTypingIndicator from "../../hooks/useTypingIndicator";
+
+export default function ChatInput({chatType, toId, onTyping}) {
+
+    const { chatSocket } = useContext(ChatContext)
+    const { sendStopTyping } = useTypingIndicator();
 
     const [messageText, setMessageText] = useState('');
 
@@ -22,8 +28,15 @@ export default function ChatInput({onSend, onTyping}) {
     const handleSend = () => {
 
         setMessageText('');
-        onSend(messageText)
+        sendMessage(messageText)
+        sendStopTyping()
     }
+    
+    const sendMessage = (messageText) => {
+        if (messageText.trim() !== '') {
+          chatSocket.emit('send_message', {messageText, chatType, toId});
+        }
+    };
 
     return(
         <div className="border-t border-neutral-800 px-6 py-4 bg-neutral-900 flex items-start gap-4">
