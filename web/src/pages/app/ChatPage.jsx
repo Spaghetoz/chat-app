@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import ChatWindow from "../../features/chat/components/ChatWindow/ChatWindow";
 import { ChatContext } from "../../features/chat/contexts/ChatContext";
 import ChatSidebar from "../../features/chat/components/ChatSidebar/ChatSidebar";
 
-import Whiteboard from "@/features/whiteboard/Whiteboard";
+import WhiteboardWindow from "../../features/whiteboard/WhiteboardWindow";
 
 export default function ChatPage() {
 
@@ -19,16 +19,18 @@ export default function ChatPage() {
 
         <ChatSidebar/>
 
-        <div className="flex-1 flex flex-col">
+        {showWhiteboard ?
+          <WhiteboardWindow 
+            onExit={() => setShowWhiteboard(false)}
+          /> 
+          : 
           <ChatWindow 
             chatType=""
             toId=""
             messages={chat}
             onToggleWhiteboard={() => setShowWhiteboard(!showWhiteboard)} 
           />
-        </div>
-
-        {showWhiteboard && <Whiteboard/>}
+        }
       </div>
     </div>
   );
