@@ -27,6 +27,8 @@ export default function ChatSidebar() {
     //TODO notification when receive dm
   }, [])
 
+  const [searchText, setSearchText] = useState("");
+
   return (
 
     <div className="lg:w-80 md:w-68 h-screen bg-neutral-950 text-white flex flex-col">
@@ -34,9 +36,9 @@ export default function ChatSidebar() {
       <div className="flex-1 flex flex-col overflow-hidden">
 
         <div className="flex-1 overflow-y-auto">
-          <SearchBar />
-          <ChatSection title="Private messages" items={privateChats} />
-          <ChatSection title="Rooms" items={rooms} />
+          <SearchBar onChange={(value) => setSearchText(value)}/>
+          <ChatSection title="Private messages" items={privateChats} searchText={searchText}/>
+          <ChatSection title="Rooms" items={rooms} searchText={searchText}/>
         </div>
 
       </div>

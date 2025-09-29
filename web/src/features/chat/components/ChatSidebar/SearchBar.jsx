@@ -1,7 +1,7 @@
 
 import { Search } from "lucide-react";
 
-export default function SearchBar() {
+export default function SearchBar({onChange}) {
 
     return(
         <div className="p-4">
@@ -10,6 +10,8 @@ export default function SearchBar() {
             <input
                 type="text"
                 placeholder="Search..."
+                // TODO improve performance to avoid sending change on each typed character
+                onChange={(e) => onChange(e.target.value)}
                 className="focus:outline-none text-[14px] w-full text-white"
             />
             </div>
